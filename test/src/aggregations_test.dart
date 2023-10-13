@@ -1,5 +1,5 @@
-import 'package:neatdart/src/aggregations.dart';
 import 'package:test/test.dart';
+import 'package:neatdart/src/aggregations.dart';
 
 void main() {
   test('aggregations productAggregation', () async {

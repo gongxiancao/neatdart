@@ -1,5 +1,5 @@
-import 'package:neatdart/src/utils.dart';
 import 'package:test/test.dart';
+import 'package:neatdart/src/utils.dart';
 
 void main() {
   test('utils sum', () async {
