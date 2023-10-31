@@ -1,5 +1,5 @@
 import 'dart:math';
-import 'utils.dart';
+import 'math_utils.dart';
 
 double productAggregation(Iterable<double> x) {
   double r = 1.0;
