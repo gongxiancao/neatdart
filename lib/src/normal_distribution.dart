@@ -1,7 +1,7 @@
 import 'dart:math' as math;
 
 class NormalDistribution {
-  NormalDistribution(this.mean, this.deviation);
+  NormalDistribution({required this.mean, required this.deviation});
   final source = math.Random();
   final double mean;
   final double deviation;
