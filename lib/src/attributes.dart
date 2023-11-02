@@ -136,7 +136,7 @@ class StringAttributeConfig {
     required this.options,
     String? defaultValue,
     required this.mutateRate
-  }): defaultValue = defaultValue != null && options.contains(defaultValue!) ? defaultValue : null;
+  }): defaultValue = defaultValue != null && options.contains(defaultValue) ? defaultValue : null;
 
   String initValue() {
     return defaultValue ?? RandomUtils.choice(options);
@@ -144,15 +144,14 @@ class StringAttributeConfig {
 
   String mutateValue(String value) {
   if (mutateRate > 0) {
-  final r = RandomUtils.nextDouble();
-    if (r < mutateRate) {
-      return RandomUtils.choice(options);
+    final r = RandomUtils.nextDouble();
+      if (r < mutateRate) {
+        return RandomUtils.choice(options);
+      }
     }
-  }
-  return value;
+    return value;
   }
 }
-
 
 /// Class for string attributes such as the aggregation function of a node,
 /// which are selected from a list of options.
@@ -162,7 +161,7 @@ class StringAttribute extends BaseAttribute {
   }
 
   String mutateValue(String value, StringAttributeConfig config) {
-  return config.mutateValue(value);
+    return config.mutateValue(value);
   }
 }
 
