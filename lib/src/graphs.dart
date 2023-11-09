@@ -138,7 +138,7 @@ class Graphs {
   ///  Note that the returned layers do not contain nodes whose output is ultimately
   ///  never used to compute the final network output.
   ///
-  static List<Set<int>> recurrent_layers(List<int> inputs, List<int> outputs, List<ConnectionGeneKey> connections) {
+  static List<Set<int>> recurrentLayers(List<int> inputs, List<int> outputs, List<ConnectionGeneKey> connections) {
     final required = requiredForOutput(inputs, outputs, connections);
 
     final layers = <Set<int>>[];

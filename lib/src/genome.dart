@@ -1,5 +1,6 @@
 import 'genes.dart';
 import 'dart:math';
+import 'graphs.dart';
 import 'random_utils.dart';
 
 enum InitialConnection {
@@ -168,7 +169,7 @@ class Genome {
         connections[key] = cg1.copy();
       } else {
         // Homologous gene: combine genes from both parents.
-        connections[key] = cg1.crossover(cg2!);
+        connections[key] = cg1.crossover(cg2);
       }
     }
 
@@ -185,7 +186,7 @@ class Genome {
         nodes[key] = ng1.copy();
       } else {
         // Homologous gene: combine genes from both parents.
-        nodes[key] = ng1.crossover(ng2!);
+        nodes[key] = ng1.crossover(ng2);
       }
     }
   }
@@ -408,7 +409,7 @@ class Genome {
     // they cannot be the output end of a connection (see above).
 
     // For feed-forward networks, avoid creating cycles.
-    if (config.feedForward && Graphs.createsCycle(connections: List<int>.from(connections.keys), test: key)) {
+    if (config.feedForward && Graphs.createsCycle(List<ConnectionGeneKey>.from(connections.keys), key)) {
       return;
     }
 
@@ -479,7 +480,7 @@ class Genome {
           disjointNodes += 1;
         } else {
           // Homologous genes compute their own distance value.
-          nodeDistance += n1.distance(n2!, config.node);
+          nodeDistance += n1.distance(n2, config.node);
         }
       }
 
@@ -505,7 +506,7 @@ class Genome {
           disjointConnections += 1;
         } else {
           // Homologous genes compute their own distance value.
-          connectionDistance += c1.distance(c2!, config.connection);
+          connectionDistance += c1.distance(c2, config.connection);
         }
       }
 
