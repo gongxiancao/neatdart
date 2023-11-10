@@ -83,7 +83,11 @@ class Graphs {
   ///  Returns a list of layers, with each layer consisting of a set of node identifiers.
   ///  Note that the returned layers do not contain nodes whose output is ultimately
   ///  never used to compute the final network output.
-  static List<Set<int>> feedForwardLayers(List<int> inputs, List<int> outputs, List<ConnectionGeneKey> connections) {
+  static List<Set<int>> feedForwardLayers({
+    required List<int> inputs,
+    required List<int> outputs,
+    required List<ConnectionGeneKey> connections
+  }) {
     final required = requiredForOutput(inputs, outputs, connections);
 
     final layers = <Set<int>>[];
