@@ -1,3 +1,7 @@
+class InvalidArgumentException implements Exception {
+  final String message;
+  InvalidArgumentException(this.message);
+}
 
 abstract class NeuralNetwork {
   List<double> activate(List<double> inputs);
@@ -6,9 +10,7 @@ abstract class NeuralNetwork {
 class NeuralNetworkInput {
   final int nodeId;
   final double weight;
-  NeuralNetworkInput({
-    required this.nodeId,
-    required this.weight});
+  NeuralNetworkInput({required this.nodeId, required this.weight});
 }
 
 class NeuralNetworkNode {
