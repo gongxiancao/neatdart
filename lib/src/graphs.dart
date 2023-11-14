@@ -12,7 +12,7 @@ class Graphs {
       return true;
     }
 
-    final visited = <int>{};
+    final visited = <int>{o};
     while (true) {
       var numAdded = 0;
       for (final key in connections) {
@@ -40,7 +40,11 @@ class Graphs {
   ///  By convention, the output node ids are always the same as the output index.
   ///
   ///  Returns a set of identifiers of required nodes.
-  static Set<int> requiredForOutput(List<int> inputs, List<int> outputs, List<ConnectionGeneKey> connections) {
+  static Set<int> requiredForOutput({
+    required List<int> inputs,
+    required List<int> outputs,
+    required List<ConnectionGeneKey> connections
+  }) {
     var required = Set<int>.from(outputs);
     var s = Set<int>.from(outputs);
     while (true) {
@@ -88,7 +92,7 @@ class Graphs {
     required List<int> outputs,
     required List<ConnectionGeneKey> connections
   }) {
-    final required = requiredForOutput(inputs, outputs, connections);
+    final required = requiredForOutput(inputs: inputs, outputs: outputs, connections: connections);
 
     final layers = <Set<int>>[];
     var s = Set<int>.from(inputs);
@@ -142,8 +146,12 @@ class Graphs {
   ///  Note that the returned layers do not contain nodes whose output is ultimately
   ///  never used to compute the final network output.
   ///
-  static List<Set<int>> recurrentLayers(List<int> inputs, List<int> outputs, List<ConnectionGeneKey> connections) {
-    final required = requiredForOutput(inputs, outputs, connections);
+  static List<Set<int>> recurrentLayers({
+    required List<int> inputs,
+    required List<int> outputs,
+    required List<ConnectionGeneKey> connections
+  }) {
+    final required = requiredForOutput(inputs: inputs, outputs: outputs, connections: connections);
 
     final layers = <Set<int>>[];
     var s = Set<int>.from(inputs);

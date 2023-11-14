@@ -91,6 +91,14 @@ class ConnectionGeneKey {
   int outputKey;
 
   ConnectionGeneKey(this.inputKey, this.outputKey);
+
+  static List<ConnectionGeneKey> fromTuples(List<(int, int)> tuples) {
+    final result = <ConnectionGeneKey>[];
+    for (final (input, output) in tuples) {
+      result.add(ConnectionGeneKey(input, output));
+    }
+    return result;
+  }
 }
 
 class ConnectionGene extends BaseGene<ConnectionGeneKey> {

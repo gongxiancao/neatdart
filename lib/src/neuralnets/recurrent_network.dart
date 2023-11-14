@@ -79,7 +79,11 @@ class RecurrentNetwork implements NeuralNetwork {
   static RecurrentNetwork create({required Genome genome, required Config config}) {
     // Receives a genome and returns its phenotype (a RecurrentNetwork).
     final genomeConfig = config.genome;
-    final required = Graphs.requiredForOutput(genomeConfig.inputKeys, genomeConfig.outputKeys, List<ConnectionGeneKey>.from(genome.connections.keys));
+    final required = Graphs.requiredForOutput(
+        inputs: genomeConfig.inputKeys,
+        outputs: genomeConfig.outputKeys,
+        connections: List<ConnectionGeneKey>.from(genome.connections.keys)
+    );
 
     // Gather inputs and expressed connections.
     final nodeInputs = <int, List<NeuralNetworkInput>>{};
