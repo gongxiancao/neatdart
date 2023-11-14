@@ -8,16 +8,16 @@ void main() {
     expect(Graphs.createsCycle(ConnectionGeneKey.fromTuples([(0, 1), (1, 2), (2, 3)]), ConnectionGeneKey(0, 0)), true);
 
     expect(Graphs.createsCycle(ConnectionGeneKey.fromTuples([(0, 1), (1, 2), (2, 3)]), ConnectionGeneKey(1, 0)), true);
-    expect(!Graphs.createsCycle(ConnectionGeneKey.fromTuples([(0, 1), (1, 2), (2, 3)]), ConnectionGeneKey(0, 1)), true);
+    expect(Graphs.createsCycle(ConnectionGeneKey.fromTuples([(0, 1), (1, 2), (2, 3)]), ConnectionGeneKey(0, 1)), false);
 
     expect(Graphs.createsCycle(ConnectionGeneKey.fromTuples([(0, 1), (1, 2), (2, 3)]), ConnectionGeneKey(2, 0)), true);
-    expect(!Graphs.createsCycle(ConnectionGeneKey.fromTuples([(0, 1), (1, 2), (2, 3)]), ConnectionGeneKey(0, 2)), true);
+    expect(Graphs.createsCycle(ConnectionGeneKey.fromTuples([(0, 1), (1, 2), (2, 3)]), ConnectionGeneKey(0, 2)), false);
 
     expect(Graphs.createsCycle(ConnectionGeneKey.fromTuples([(0, 1), (1, 2), (2, 3)]), ConnectionGeneKey(3, 0)), true);
-    expect(!Graphs.createsCycle(ConnectionGeneKey.fromTuples([(0, 1), (1, 2), (2, 3)]), ConnectionGeneKey(0, 3)), true);
+    expect(Graphs.createsCycle(ConnectionGeneKey.fromTuples([(0, 1), (1, 2), (2, 3)]), ConnectionGeneKey(0, 3)), false);
 
     expect(Graphs.createsCycle(ConnectionGeneKey.fromTuples([(0, 2), (1, 3), (2, 3), (4, 2)]), ConnectionGeneKey(3, 4)), true);
-    expect(!Graphs.createsCycle(ConnectionGeneKey.fromTuples([(0, 2), (1, 3), (2, 3), (4, 2)]), ConnectionGeneKey(4, 3)), true);
+    expect(Graphs.createsCycle(ConnectionGeneKey.fromTuples([(0, 2), (1, 3), (2, 3), (4, 2)]), ConnectionGeneKey(4, 3)), false);
   });
 
   test('graphs requiredForOutput', () async {
