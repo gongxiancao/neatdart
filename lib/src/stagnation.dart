@@ -6,10 +6,11 @@ class StagnationConfig {
   final double Function(List<double>) speciesFitnessFunc;
   final int maxStagnation;
   final int speciesElitism;
-  StagnationConfig(
-      {required this.speciesFitnessFunc,
-      required this.maxStagnation,
-      required this.speciesElitism});
+  StagnationConfig({
+    required this.speciesFitnessFunc,
+    required this.maxStagnation,
+    required this.speciesElitism
+  });
 }
 
 /// Keeps track of whether species are making progress and helps remove ones that are not.

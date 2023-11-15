@@ -22,9 +22,9 @@ class GenomeSize {
 class GenomeConfig {
   final int numInputs;
   final int numOutputs;
-  final int numHidden;
-  final InitialConnection initialConnection;
-  final double connectionFraction;
+  int numHidden;
+  InitialConnection initialConnection;
+  double connectionFraction;
   final bool singleStructuralMutation;
   final bool structuralMutationSurer;
   final double compatibilityDisjointCoefficient;

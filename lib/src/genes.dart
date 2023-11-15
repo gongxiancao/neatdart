@@ -92,6 +92,12 @@ class ConnectionGeneKey {
 
   ConnectionGeneKey(this.inputKey, this.outputKey);
 
+  @override
+  bool operator == (other) => other is ConnectionGeneKey && inputKey == other.inputKey && outputKey == other.outputKey;
+
+  @override
+  int get hashCode => Object.hash(inputKey, outputKey);
+
   static List<ConnectionGeneKey> fromTuples(List<(int, int)> tuples) {
     final result = <ConnectionGeneKey>[];
     for (final (input, output) in tuples) {
