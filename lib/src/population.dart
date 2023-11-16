@@ -31,17 +31,17 @@ class CompleteExtinctionException implements Exception {
 class Population {
 
   final Config config;
-  final ReporterSet reporters;
+  final BaseReporter reporter;
   int generation = 0;
   late Map<int, Genome> population;
   final SpeciesSet species;
   Genome? bestGenome;
   Reproduction reproduction;
 
-  Population({required this.config, required this.reporters})
-    : reproduction = Reproduction(config: config.reproduction, reporters: reporters,
-        stagnation: Stagnation(config: config.stagnation, reporters: reporters)),
-      species = SpeciesSet(config: config.speciesSet, reporters: reporters)
+  Population({required this.config, required this.reporter})
+    : reproduction = Reproduction(config: config.reproduction, reporter: reporter,
+        stagnation: Stagnation(config: config.stagnation, reporter: reporter)),
+      species = SpeciesSet(config: config.speciesSet, reporter: reporter)
   {
     population = reproduction.createNew(config.genome, config.popSize);
     species.speciate(config: config, population: population, generation: generation);
@@ -70,7 +70,7 @@ class Population {
 
     int k = 0;
     while (generations <= 0 || k ++ < generations) {
-      reporters.startGeneration(generation);
+      reporter.startGeneration(generation);
 
       // Evaluate all genomes using the user-provided function.
       fitnessDelegate.evaluate(genomes: population.values, config: config);
@@ -86,7 +86,7 @@ class Population {
           best = g;
         }
       }
-      reporters.postEvaluate(config: config, population: population, speciesSet: species, bestGenome: best!);
+      reporter.postEvaluate(config: config, population: population, speciesSet: species, bestGenome: best!);
 
       // Track the best genome ever seen.
       if (bestGenome == null || best.fitness! > bestGenome!.fitness!) {
@@ -102,7 +102,7 @@ class Population {
 
         final fv = config.fitnessCriterion(fitnesses);
         if (config.fitnessThreshold != 0 && fv >= config.fitnessThreshold) {
-          reporters.foundSolution(config: config, generation: generation, bestGenome: best);
+          reporter.foundSolution(config: config, generation: generation, bestGenome: best);
           break;
         }
       }
@@ -113,7 +113,7 @@ class Population {
 
       // Check for complete extinction.
       if (species.species.isEmpty) {
-        reporters.completeExtinction();
+        reporter.completeExtinction();
 
         // If requested by the user, create a completely new population,
         // otherwise raise an exception.
@@ -127,13 +127,13 @@ class Population {
       // Divide the new population into species.
       species.speciate(config: config, population: population, generation: generation);
 
-      reporters.endGeneration(config: config, population: population, speciesSet: species);
+      reporter.endGeneration(config: config, population: population, speciesSet: species);
 
       generation += 1;
     }
 
     if (config.noFitnessTermination) {
-      reporters.foundSolution(config: config, generation: generation, bestGenome: bestGenome!);
+      reporter.foundSolution(config: config, generation: generation, bestGenome: bestGenome!);
     }
 
     return bestGenome!;

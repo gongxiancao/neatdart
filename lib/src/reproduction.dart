@@ -22,13 +22,13 @@ class ReproductionConfig {
 class Reproduction {
    final ReproductionConfig config;
    int genomeIndexer = 0;
-   final ReporterSet reporters;
+   final BaseReporter reporter;
    final Stagnation stagnation;
    final ancestors = <int, (int, int)>{};
 
    Reproduction({
      required this.config,
-     required this.reporters,
+     required this.reporter,
      required this.stagnation
    });
 
@@ -111,7 +111,7 @@ class Reproduction {
     final remainingSpecies = <Species>[];
     for (final (stagSid, stagS, stagnant) in stagnation.update(speciesSet: speciesSet, generation: generation)) {
       if (stagnant) {
-        reporters.speciesStagnant(sid: stagSid, species: stagS);
+        reporter.speciesStagnant(sid: stagSid, species: stagS);
       } else {
         for (final m in stagS.members!.values) {
           allFitnesses.add(m.fitness!);
@@ -148,7 +148,7 @@ class Reproduction {
     }
 
     final avgAdjustedFitness = mean(adjustedFitnesses);
-    reporters.info('Average adjusted fitness: $avgAdjustedFitness');
+    reporter.info('Average adjusted fitness: $avgAdjustedFitness');
 
     // Compute the number of new members for each species in the new generation.
     final previousSizes = remainingSpecies.map((Species s) => s.members!.length);

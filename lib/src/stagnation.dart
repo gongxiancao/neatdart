@@ -16,9 +16,9 @@ class StagnationConfig {
 /// Keeps track of whether species are making progress and helps remove ones that are not.
 class Stagnation {
   final StagnationConfig config;
-  final ReporterSet reporters;
+  final BaseReporter reporter;
 
-  Stagnation({required this.config, required this.reporters});
+  Stagnation({required this.config, required this.reporter});
 
   /// Required interface method. Updates species fitness history information,
   /// checking for ones that have not improved in maxStagnation generations,

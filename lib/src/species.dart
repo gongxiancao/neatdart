@@ -75,11 +75,11 @@ class SpeciesSet {
 
   final SpeciesSetConfig config;
   var species = <int, Species>{};
-  final ReporterSet reporters;
+  final BaseReporter reporter;
   int indexer = 0;
   Map<int, int>? genomeToSpecies;
 
-  SpeciesSet({required this.config, required this.reporters});
+  SpeciesSet({required this.config, required this.reporter});
 
   int nextId() {
     indexer += 1;
@@ -175,6 +175,6 @@ class SpeciesSet {
 
     final gdmean = mean(distances.distances.values);
     final gdstdev = stdev(distances.distances.values);
-    reporters.info('Mean genetic distance $gdmean, standard deviation $gdstdev');
+    reporter.info('Mean genetic distance $gdmean, standard deviation $gdstdev');
   }
 }
