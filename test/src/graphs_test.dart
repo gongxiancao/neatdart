@@ -1,4 +1,5 @@
 import 'package:test/test.dart';
+import 'dart:math';
 import 'package:neatdart/src/graphs.dart';
 import 'package:neatdart/src/genes.dart';
 import 'package:neatdart/src/random_utils.dart';
@@ -72,8 +73,8 @@ void main() {
       final nodes = List<int>.from(nodesSet);
       nodes.shuffle();
 
-      final inputs = nodes.sublist(0, nIn);
-      final outputs = nodes.sublist(nIn, nIn + nOut);
+      final inputs = nodes.sublist(0, min(nIn, nodes.length));
+      final outputs = nodes.sublist(nIn, min(nIn + nOut, nodes.length));
       var connections = <ConnectionGeneKey>[];
       for (int i = nHidden * 2; i > 0; --i) {
         final a = RandomUtils.choice(nodes);

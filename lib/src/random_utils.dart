@@ -10,7 +10,7 @@ class RandomUtils {
   }
 
   static T choice<T>(Iterable<T> options)  {
-    final i = source.nextInt(options.length - 1);
+    final i = source.nextInt(options.length);
     return options.elementAt(i);
   }
 

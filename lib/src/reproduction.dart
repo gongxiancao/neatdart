@@ -200,6 +200,7 @@ class Reproduction {
       var reproCutoff = (this.config.survivalThreshold * oldMembers.length).ceil();
       // Use at least two parents no matter what the threshold fraction result is.
       reproCutoff = max(reproCutoff, 2);
+      reproCutoff = min(reproCutoff, oldMembers.length);
       oldMembers = oldMembers.sublist(0, reproCutoff);
 
       // Randomly choose parents and produce the number of offspring allotted to the species.

@@ -101,6 +101,7 @@ class Population {
         }
 
         final fv = config.fitnessCriterion(fitnesses);
+        print('fitness::::: $fv');
         if (config.fitnessThreshold != 0 && fv >= config.fitnessThreshold) {
           reporter.foundSolution(config: config, generation: generation, bestGenome: best);
           break;
