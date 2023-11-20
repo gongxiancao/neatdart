@@ -101,6 +101,28 @@ class Genome {
     return config.nodeIndexer;
   }
 
+  factory Genome.fromJson(Map<String, dynamic> data) {
+    if (data case {
+      'key': int key,
+      'nodes': List<Map<String,dynamic>> nodes,
+      'connections': List<Map<String, dynamic>> connections,
+      'fitness': num? fitness
+    }) {
+      final genome = Genome(key);
+      for (final nodeData in nodes) {
+        final node = NodeGene.fromJson(nodeData);
+        genome.nodes[node.key] = node;
+      }
+      for (final connectionData in connections) {
+        final connection = ConnectionGene.fromJson(connectionData);
+        genome.connections[connection.key] = connection;
+      }
+      genome.fitness = fitness?.toDouble();
+      return genome;
+    }
+    throw FormatException('Invalid JSON: $data');
+  }
+
   NodeGene createNode(NodeGeneConfig config, int key) {
     final node = NodeGene(key);
     node.initAttributes(config);

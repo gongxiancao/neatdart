@@ -30,6 +30,24 @@ class NodeGene extends BaseGene<int> {
 
   NodeGene(int key): super(key);
 
+  factory NodeGene.fromJson(Map<String, dynamic> data) {
+    if (data case {
+      'key': int key,
+      'bias': num? bias,
+      'response': num? response,
+      'activation': String? activation,
+      'aggregation': String? aggregation
+    }) {
+      final node = NodeGene(key);
+      node.bias = bias?.toDouble();
+      node.response = response?.toDouble();
+      node.activation = activation;
+      node.aggregation = aggregation;
+      return node;
+    }
+    throw FormatException('Invalid JSON: $data');
+  }
+
   void initAttributes(NodeGeneConfig config) {
     bias = config.bias.initValue();
     response = config.response.initValue();
@@ -92,6 +110,16 @@ class ConnectionGeneKey {
 
   ConnectionGeneKey(this.inputKey, this.outputKey);
 
+  factory ConnectionGeneKey.fromJson(Map<String, dynamic> data) {
+    if (data case {
+      'inputKey': int inputKey,
+      'outputKey': int outputKey
+    }) {
+      return ConnectionGeneKey(inputKey, outputKey);
+    }
+    throw FormatException('Invalid JSON: $data');
+  }
+
   @override
   bool operator == (other) => other is ConnectionGeneKey && inputKey == other.inputKey && outputKey == other.outputKey;
 
@@ -112,6 +140,20 @@ class ConnectionGene extends BaseGene<ConnectionGeneKey> {
   bool? enabled;
 
   ConnectionGene(ConnectionGeneKey key): super(key);
+
+  factory ConnectionGene.fromJson(Map<String, dynamic> data) {
+    if (data case {
+      'key': Map<String, dynamic> key,
+      'weight': num? weight,
+      'enabled': bool? enabled
+    }) {
+      final gene = ConnectionGene(ConnectionGeneKey.fromJson(key));
+      gene.weight = weight?.toDouble();
+      gene.enabled = enabled;
+      return gene;
+    }
+    throw FormatException('Invalid JSON: $data');
+  }
 
   void initAttributes(ConnectionGeneConfig config) {
     weight = config.weight.initValue();
