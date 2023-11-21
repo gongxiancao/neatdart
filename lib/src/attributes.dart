@@ -32,8 +32,8 @@ class FloatAttributeConfig {
     required this.mutateRate,
     required this.replaceRate
   }):
-    _initGaussianDistribution = NormalDistribution(mean: mean, deviation: stdev),
-    _mutateDistribution = NormalDistribution(mean: 0, deviation: mutatePower);
+    _initGaussianDistribution = NormalDistribution(source: RandomUtils.source, mean: mean, deviation: stdev),
+    _mutateDistribution = NormalDistribution(source: RandomUtils.source, mean: 0, deviation: mutatePower);
 
   double clamp(double value) {
     return max(min(value, maxValue), minValue);

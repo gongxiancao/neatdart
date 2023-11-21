@@ -1,10 +1,11 @@
 import 'dart:math' as math;
 
 class NormalDistribution {
-  NormalDistribution({required this.mean, required this.deviation});
-  final source = math.Random();
+  final math.Random source;
   final double mean;
   final double deviation;
+
+  NormalDistribution({required this.source, required this.mean, required this.deviation});
 
   // Box-Muller algorithm.
   double next() {

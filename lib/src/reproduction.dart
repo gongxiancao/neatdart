@@ -180,7 +180,7 @@ class Reproduction {
       speciesSet.species[s.key] = s;
 
       // Sort members in order of descending fitness.
-      oldMembers.sort((MapEntry<int, Genome> a, MapEntry<int, Genome> b) => (b.value.fitness! - a.value.fitness!).toInt());
+      oldMembers.sort((MapEntry<int, Genome> a, MapEntry<int, Genome> b) => sign(b.value.fitness! - a.value.fitness!));
 
       // Transfer elites to new generation.
       if (this.config.elitism > 0) {

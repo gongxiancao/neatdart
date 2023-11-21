@@ -4,7 +4,7 @@ import 'config.dart';
 
 abstract class BaseReporter {
   void startGeneration(int generation);
-  void endGeneration({required Config config, required Map<int, Genome> population, required SpeciesSet speciesSet});
+  void endGeneration({required Config config, required int generation, required Map<int, Genome> population, required SpeciesSet speciesSet});
   void postEvaluate({required Config config, required Map<int, Genome> population, required SpeciesSet speciesSet, required Genome bestGenome});
   void postReproduction({required Config config, required Map<int, Genome> population, required SpeciesSet speciesSet});
   void completeExtinction();
@@ -20,13 +20,13 @@ class StdOutReporter implements BaseReporter {
   }
 
   @override
-  void endGeneration({required Config config, required Map<int, Genome> population, required SpeciesSet speciesSet}) {
-    print('endGeneration');
+  void endGeneration({required Config config, required int generation, required Map<int, Genome> population, required SpeciesSet speciesSet}) {
+    print('endGeneration $generation');
   }
 
   @override
   void postEvaluate({required Config config, required Map<int, Genome> population, required SpeciesSet speciesSet, required Genome bestGenome}) {
-    print('postEvaluate');
+    print('postEvaluate: bestGenome.fitness = ${bestGenome.fitness}');
   }
 
   @override
@@ -73,9 +73,9 @@ class ReporterSet implements BaseReporter {
   }
 
   @override
-  void endGeneration({required Config config, required Map<int, Genome> population, required SpeciesSet speciesSet}) {
+  void endGeneration({required Config config, required int generation, required Map<int, Genome> population, required SpeciesSet speciesSet}) {
     for (final reporter in reporters) {
-      reporter.endGeneration(config: config, population: population, speciesSet: speciesSet);
+      reporter.endGeneration(config: config, generation: generation, population: population, speciesSet: speciesSet);
     }
   }
 

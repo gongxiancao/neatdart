@@ -1,5 +1,6 @@
 import 'package:neatdart/src/species.dart';
 import 'dart:math';
+import 'math_utils.dart';
 import 'reporting.dart';
 
 class StagnationConfig {
@@ -48,7 +49,7 @@ class Stagnation {
 
     // Sort in ascending fitness order.
     speciesData.sort(((int, Species) a, (int, Species) b) =>
-        (a.$2.fitness! - b.$2.fitness!).toInt());
+        sign(a.$2.fitness! - b.$2.fitness!));
 
     final result = <(int, Species, bool)>[];
     final speciesFitnesses = <double>[];

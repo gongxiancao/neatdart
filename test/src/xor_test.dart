@@ -25,24 +25,16 @@ class TestFitnessDelegate implements FitnessDelegate {
     for (final (index, xi) in xorInputs.indexed) {
       final output = net.activate(xi);
       final xo = xorOutputs[index];
-      print('output: $output, xo: $xo');
+      // print('output: $output, xo: $xo');
       genome.fitness = genome.fitness! - (output[0] - xo[0]) * (output[0] - xo[0]);
     }
-    print('genome.fitness: ${genome.fitness}');
+    // print('genome.fitness: ${genome.fitness}');
   }
 
   @override
   void evaluate({required Iterable<Genome> genomes, required Config config}) {
     for (final genome in genomes) {
-      genome.fitness = 4.0;
-      final net = FeedForwardNetwork.create(genome: genome, config: config);
-      for (final (index, xi) in xorInputs.indexed) {
-        final output = net.activate(xi);
-        final xo = xorOutputs[index];
-        print('output: $output, xo: $xo');
-        genome.fitness = genome.fitness! - (output[0] - xo[0]) * (output[0] - xo[0]);
-      }
-      print('genome.fitness: ${genome.fitness}');
+      evaluateGenome(genome: genome, config: config);
     }
   }
 }
@@ -306,19 +298,8 @@ void main() {
 
     final fitnessDelegate = TestFitnessDelegate(xorInputs: xorInputs, xorOutputs: xorOutputs);
     // Run for up to 300 generations.
-    final winner = p.run(fitnessDelegate: fitnessDelegate, generations: 300);
+    final winner = p.run(fitnessDelegate: fitnessDelegate, generations: 100);
 
-    // Display the winning genome.
-    print('\nBest genome:\n${winner.key}');
-
-    // Show output of the most fit genome against training data.
-    print("\nOutput:");
-    final winnerNet = FeedForwardNetwork.create(genome: winner, config: config);
-    for (final (index, xi) in xorInputs.indexed) {
-      final xo = xorOutputs[index];
-      final output = winnerNet.activate(xi);
-      print('input $xi, expected output $xo, got $output');
-    }
-    // p.run(fitnessDelegate: fitnessDelegate, generations: 10);
+    expect(winner.fitness, closeTo(3.9, 0.1));
   });
 }

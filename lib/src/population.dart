@@ -127,7 +127,7 @@ class Population {
       // Divide the new population into species.
       species.speciate(config: config, population: population, generation: generation);
 
-      reporter.endGeneration(config: config, population: population, speciesSet: species);
+      reporter.endGeneration(config: config, generation: generation, population: population, speciesSet: species);
 
       generation += 1;
     }

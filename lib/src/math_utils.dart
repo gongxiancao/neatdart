@@ -1,5 +1,9 @@
 import 'dart:math';
 
+int sign<T extends num>(T a) {
+  return a.sign.toInt();
+}
+
 T abs<T extends num>(T a) {
   if (a < 0) {
     return (-a) as T;

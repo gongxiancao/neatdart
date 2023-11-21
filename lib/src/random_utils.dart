@@ -1,7 +1,7 @@
 import 'dart:math' as math;
 
 class RandomUtils {
-  static math.Random source = math.Random();
+  static math.Random source = math.Random(1);
   static int nextInt(int lowerBound, int upperBound) {
     return source.nextInt(upperBound - lowerBound) + lowerBound;
   }
