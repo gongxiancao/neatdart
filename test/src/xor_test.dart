@@ -13,11 +13,11 @@ import 'package:neatdart/src/aggregation_function_set.dart';
 import 'package:neatdart/src/activation_function_set.dart';
 import 'package:neatdart/src/neuralnets/feed_forward_network.dart';
 
-class TestFitnessDelegate implements FitnessDelegate {
+class XorFitnessDelegate implements FitnessDelegate {
   final List<List<double>> xorInputs;
   final List<List<double>> xorOutputs;
 
-  TestFitnessDelegate({required this.xorInputs, required this.xorOutputs});
+  XorFitnessDelegate({required this.xorInputs, required this.xorOutputs});
 
   void evaluateGenome({required Genome genome, required Config config}) {
     genome.fitness = 4.0;
@@ -283,7 +283,7 @@ void main() {
       "fitness" : 0
     };
     final genome = Genome.fromJson(genomeData);
-    final fitnessDelegate = TestFitnessDelegate(xorInputs: xorInputs, xorOutputs: xorOutputs);
+    final fitnessDelegate = XorFitnessDelegate(xorInputs: xorInputs, xorOutputs: xorOutputs);
     fitnessDelegate.evaluateGenome(genome: genome, config: config);
     expect(genome.fitness, closeTo(3.9, 0.1));
   });
@@ -296,8 +296,8 @@ void main() {
     final reporter = StdOutReporter();
     final p = Population(config: config, reporter: reporter);
 
-    final fitnessDelegate = TestFitnessDelegate(xorInputs: xorInputs, xorOutputs: xorOutputs);
-    // Run for up to 300 generations.
+    final fitnessDelegate = XorFitnessDelegate(xorInputs: xorInputs, xorOutputs: xorOutputs);
+    // Run for up to 100 generations.
     final winner = p.run(fitnessDelegate: fitnessDelegate, generations: 100);
 
     expect(winner.fitness, closeTo(3.9, 0.1));

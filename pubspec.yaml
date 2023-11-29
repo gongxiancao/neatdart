@@ -1,7 +1,7 @@
 name: neatdart
-description: A starting point for Dart libraries or applications.
+description: NEAT is a method developed by Kenneth O. Stanley for evolving arbitrary neural networks. NEAT-Dart is a pure Dart implementation of NEAT, with no dependencies other than the Dart standard library.
 version: 1.0.0
-# repository: https://github.com/my_org/my_repo
+repository: https://github.com/gongxiancao/neatdart
 
 environment:
   sdk: ^3.1.2

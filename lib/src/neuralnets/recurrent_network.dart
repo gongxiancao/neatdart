@@ -80,28 +80,28 @@ class RecurrentNetwork implements NeuralNetwork {
     // Receives a genome and returns its phenotype (a RecurrentNetwork).
     final genomeConfig = config.genome;
     final required = Graphs.requiredForOutput(
-        inputs: genomeConfig.inputKeys,
-        outputs: genomeConfig.outputKeys,
-        connections: List<ConnectionGeneKey>.from(genome.connections.keys)
+      inputs: genomeConfig.inputKeys,
+      outputs: genomeConfig.outputKeys,
+      connections: List<ConnectionGeneKey>.from(genome.connections.keys)
     );
 
     // Gather inputs and expressed connections.
     final nodeInputs = <int, List<NeuralNetworkInput>>{};
     for (final cg in genome.connections.values) {
       if (cg.enabled != true) {
-          continue;
+        continue;
       }
 
       final i = cg.key.inputKey;
       final o = cg.key.outputKey;
       if (!required.contains(o) && !required.contains(i)) {
-          continue;
+        continue;
       }
 
       if (!nodeInputs.containsKey(o)) {
-          nodeInputs[o] = [NeuralNetworkInput(nodeId: i, weight: cg.weight!)];
+        nodeInputs[o] = [NeuralNetworkInput(nodeId: i, weight: cg.weight!)];
       } else {
-          nodeInputs[o]!.add(NeuralNetworkInput(nodeId: i, weight: cg.weight!));
+        nodeInputs[o]!.add(NeuralNetworkInput(nodeId: i, weight: cg.weight!));
       }
     }
 
@@ -122,8 +122,9 @@ class RecurrentNetwork implements NeuralNetwork {
       ));
     }
     return RecurrentNetwork(
-        inputNodes: genomeConfig.inputKeys,
-        outputNodes: genomeConfig.outputKeys,
-        nodeEvals: nodeEvals);
+      inputNodes: genomeConfig.inputKeys,
+      outputNodes: genomeConfig.outputKeys,
+      nodeEvals: nodeEvals
+    );
   }
 }
