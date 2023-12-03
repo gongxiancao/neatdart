@@ -2,15 +2,16 @@ import 'package:neat_dart/neat_dart.dart';
 import 'package:test/test.dart';
 
 void main() {
-  group('A group of tests', () {
-    final awesome = Awesome();
-
-    setUp(() {
-      // Additional setup goes here.
-    });
-
-    test('First Test', () {
-      expect(awesome.isAwesome, isTrue);
-    });
+  test('Export Test', () {
+    Population p;
+    FeedForwardNetwork fn;
+    RecurrentNetwork rn;
+    ActivationFunctionSet afs;
+    NodeGene ng;
+    Config config;
+    Genome genome;
+    Species sp;
+    Stagnation stn;
+    expect(true, true);
   });
 }
