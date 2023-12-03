@@ -1,4 +1,4 @@
-import 'package:neatdart/neatdart.dart';
+import 'package:neat_dart/neat_dart.dart';
 import 'package:test/test.dart';
 
 void main() {

@@ -1,5 +1,5 @@
 import 'package:test/test.dart';
-import 'package:neatdart/src/activations.dart';
+import 'package:neat_dart/src/activations.dart';
 
 void main() {
   test('activations sigmoidActivation', () async {

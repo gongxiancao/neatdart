@@ -1,8 +1,8 @@
 import 'package:test/test.dart';
-import 'package:neatdart/src/activations.dart';
-import 'package:neatdart/src/aggregations.dart';
-import 'package:neatdart/src/neural_network.dart';
-import 'package:neatdart/src/neuralnets/feed_forward_network.dart';
+import 'package:neat_dart/src/activations.dart';
+import 'package:neat_dart/src/aggregations.dart';
+import 'package:neat_dart/src/neural_network.dart';
+import 'package:neat_dart/src/neuralnets/feed_forward_network.dart';
 
 
 void main() {

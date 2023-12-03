@@ -1,16 +1,16 @@
 import 'package:test/test.dart';
-import 'package:neatdart/src/genome.dart';
-import 'package:neatdart/src/config.dart';
-import 'package:neatdart/src/genes.dart';
-import 'package:neatdart/src/reproduction.dart';
-import 'package:neatdart/src/population.dart';
-import 'package:neatdart/src/attributes.dart';
-import 'package:neatdart/src/species.dart';
-import 'package:neatdart/src/stagnation.dart';
-import 'package:neatdart/src/aggregation_function_set.dart';
-import 'package:neatdart/src/activation_function_set.dart';
-import 'package:neatdart/src/aggregations.dart';
-import 'package:neatdart/src/reporting.dart';
+import 'package:neat_dart/src/genome.dart';
+import 'package:neat_dart/src/config.dart';
+import 'package:neat_dart/src/genes.dart';
+import 'package:neat_dart/src/reproduction.dart';
+import 'package:neat_dart/src/population.dart';
+import 'package:neat_dart/src/attributes.dart';
+import 'package:neat_dart/src/species.dart';
+import 'package:neat_dart/src/stagnation.dart';
+import 'package:neat_dart/src/aggregation_function_set.dart';
+import 'package:neat_dart/src/activation_function_set.dart';
+import 'package:neat_dart/src/aggregations.dart';
+import 'package:neat_dart/src/reporting.dart';
 
 class TestFitnessDelegate implements FitnessDelegate {
   @override

@@ -1,5 +1,5 @@
 import 'package:test/test.dart';
-import 'package:neatdart/src/reproduction.dart';
+import 'package:neat_dart/src/reproduction.dart';
 
 void main() {
   test('reproduction spawnAdjust1', () async {

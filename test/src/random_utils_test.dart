@@ -1,5 +1,5 @@
 import 'package:test/test.dart';
-import 'package:neatdart/src/random_utils.dart';
+import 'package:neat_dart/src/random_utils.dart';
 
 void main() {
   test('RandomUtils nextInt', () async {

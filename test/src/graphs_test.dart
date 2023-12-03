@@ -1,8 +1,8 @@
 import 'package:test/test.dart';
 import 'dart:math';
-import 'package:neatdart/src/graphs.dart';
-import 'package:neatdart/src/genes.dart';
-import 'package:neatdart/src/random_utils.dart';
+import 'package:neat_dart/src/graphs.dart';
+import 'package:neat_dart/src/genes.dart';
+import 'package:neat_dart/src/random_utils.dart';
 
 void main() {
   test('graphs createsCycle', () async {

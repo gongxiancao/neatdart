@@ -3,6 +3,6 @@
 /// More dartdocs go here.
 library;
 
-export 'src/neatdart_base.dart';
+export 'src/neat_dart_base.dart';
 
 // TODO: Export any libraries intended for clients of this package.

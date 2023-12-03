@@ -1,5 +1,5 @@
 import 'package:test/test.dart';
-import 'package:neatdart/src/math_utils.dart';
+import 'package:neat_dart/src/math_utils.dart';
 
 void main() {
   test('math_utils sign', () async {

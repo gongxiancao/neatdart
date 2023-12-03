@@ -1,6 +1,6 @@
 import 'package:test/test.dart';
-import 'package:neatdart/src/random_utils.dart';
-import 'package:neatdart/src/normal_distribution.dart';
+import 'package:neat_dart/src/random_utils.dart';
+import 'package:neat_dart/src/normal_distribution.dart';
 
 void main() {
   test('normal_distribution next', () {

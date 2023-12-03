@@ -1,4 +1,4 @@
-import 'package:neatdart/neatdart.dart';
+import 'package:neat_dart/neat_dart.dart';
 
 void main() {
   var awesome = Awesome();

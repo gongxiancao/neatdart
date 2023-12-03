@@ -1,4 +1,4 @@
-import 'package:neatdart/src/species.dart';
+import 'package:neat_dart/src/species.dart';
 import 'dart:math';
 import 'math_utils.dart';
 import 'reporting.dart';

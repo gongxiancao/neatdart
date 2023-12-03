@@ -1,5 +1,5 @@
 import 'package:test/test.dart';
-import 'package:neatdart/src/attributes.dart';
+import 'package:neat_dart/src/attributes.dart';
 
 void main() {
   test('FloatAttributeConfig test', () {
