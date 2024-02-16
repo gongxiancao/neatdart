@@ -268,7 +268,7 @@ void main() {
     g.configureNew(genomeConfig);
 
     expect(Set<int>.from(g.nodes.keys), {0, 1, 2});
-    expect(g.connections.length, 3);;
+    expect(g.connections.length, 3);
   });
 
   /// full with no hidden nodes
