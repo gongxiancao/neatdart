@@ -11,7 +11,7 @@ import 'package:neat_dart/src/aggregations.dart';
 import 'package:neat_dart/src/reporting.dart';
 import 'package:neat_dart/src/aggregation_function_set.dart';
 import 'package:neat_dart/src/activation_function_set.dart';
-import 'package:neat_dart/src/neuralnets/feed_forward_network.dart';
+import 'package:neat_dart/src/nn/feed_forward_network.dart';
 
 class XorFitnessDelegate implements FitnessDelegate {
   final List<List<double>> xorInputs;

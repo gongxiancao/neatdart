@@ -2,7 +2,7 @@ import 'package:test/test.dart';
 import 'package:neat_dart/src/activations.dart';
 import 'package:neat_dart/src/aggregations.dart';
 import 'package:neat_dart/src/neural_network.dart';
-import 'package:neat_dart/src/neuralnets/feed_forward_network.dart';
+import 'package:neat_dart/src/nn/feed_forward_network.dart';
 
 
 void main() {
