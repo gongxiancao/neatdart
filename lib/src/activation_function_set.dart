@@ -3,7 +3,8 @@ import 'activations.dart';
 typedef ActivationFunction = double Function(double z);
 
 class ActivationFunctionSet {
-  static Map<String, ActivationFunction> create() {
+  static Map<String, ActivationFunction> instance = _create();
+  static Map<String, ActivationFunction> _create() {
     var functions = <String, ActivationFunction>{};
     functions["sigmoid"] = sigmoidActivation;
     functions["tanh"] = tanActivation;

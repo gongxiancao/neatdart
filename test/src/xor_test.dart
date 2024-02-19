@@ -7,7 +7,6 @@ import 'package:neat_dart/src/config.dart';
 import 'package:neat_dart/src/species.dart';
 import 'package:neat_dart/src/stagnation.dart';
 import 'package:neat_dart/src/attributes.dart';
-import 'package:neat_dart/src/aggregations.dart';
 import 'package:neat_dart/src/reporting.dart';
 import 'package:neat_dart/src/aggregation_function_set.dart';
 import 'package:neat_dart/src/activation_function_set.dart';
@@ -19,9 +18,9 @@ class XorFitnessDelegate implements FitnessDelegate {
 
   XorFitnessDelegate({required this.xorInputs, required this.xorOutputs});
 
-  void evaluateGenome({required Genome genome, required Config config}) {
+  void evaluateGenome({required Genome genome, required GenomeContext context}) {
     genome.fitness = 4.0;
-    final net = FeedForwardNetwork.create(genome: genome, config: config);
+    final net = FeedForwardNetwork.create(genome: genome, context: context);
     for (final (index, xi) in xorInputs.indexed) {
       final output = net.activate(xi);
       final xo = xorOutputs[index];
@@ -32,9 +31,9 @@ class XorFitnessDelegate implements FitnessDelegate {
   }
 
   @override
-  void evaluate({required Iterable<Genome> genomes, required Config config}) {
+  void evaluate({required Iterable<Genome> genomes, required GenomeContext context}) {
     for (final genome in genomes) {
-      evaluateGenome(genome: genome, config: config);
+      evaluateGenome(genome: genome, context: context);
     }
   }
 }
@@ -115,8 +114,6 @@ void main() {
               ),
               compatibilityWeightCoefficient: 0.5
           ),
-          aggregationFunctionDefs: AggregationFunctionSet.create(),
-          activationDefs: ActivationFunctionSet.create()
       ),
       reproduction: ReproductionConfig(
           elitism: 2,
@@ -124,14 +121,14 @@ void main() {
           minSpeciesSize: 2
       ),
       stagnation: StagnationConfig(
-          speciesFitnessFunc: maxAggregation,
+          speciesFitness: 'max',
           maxStagnation: 20,
           speciesElitism: 2
       ),
       speciesSet: SpeciesSetConfig(
           compatibilityThreshold: 3.0
       ),
-      fitnessCriterion: maxAggregation
+      fitnessCriterion: 'max'
   );
 
   test('xor genomeEvaluate', () async {
@@ -284,7 +281,8 @@ void main() {
     };
     final genome = Genome.fromJson(genomeData);
     final fitnessDelegate = XorFitnessDelegate(xorInputs: xorInputs, xorOutputs: xorOutputs);
-    fitnessDelegate.evaluateGenome(genome: genome, config: config);
+    final context = GenomeContext(config: config.genome, aggregationFunctionDefs: AggregationFunctionSet.instance, activationDefs: ActivationFunctionSet.instance);
+    fitnessDelegate.evaluateGenome(genome: genome, context: context);
     expect(genome.fitness, closeTo(3.9, 0.1));
   });
 
@@ -293,8 +291,9 @@ void main() {
     // Use XCTAssert and related functions to verify your tests produce the correct results.
 
     // Create the population, which is the top-level object for a NEAT run.
+    final context = Context(config: config, aggregationFunctionDefs: AggregationFunctionSet.instance, activationDefs: ActivationFunctionSet.instance);
     final reporter = StdOutReporter();
-    final p = Population(config: config, reporter: reporter);
+    final p = Population(context: context, reporter: reporter);
 
     final fitnessDelegate = XorFitnessDelegate(xorInputs: xorInputs, xorOutputs: xorOutputs);
     // Run for up to 100 generations.

@@ -1,6 +1,5 @@
 import '../neural_network.dart';
 import '../genome.dart';
-import '../config.dart';
 import '../genes.dart';
 import '../graphs.dart';
 
@@ -33,10 +32,6 @@ class FeedForwardNetwork implements NeuralNetwork {
       throw InvalidArgumentException(
           'Expected ${inputNodes.length} inputs, got ${inputs.length}');
     }
-    for (final (index, id) in inputNodes.indexed) {
-      final input = inputs[index];
-      values[id] = input;
-    }
 
     for (final (idx, i) in inputNodes.indexed) {
       values[i] = inputs[idx];
@@ -59,7 +54,7 @@ class FeedForwardNetwork implements NeuralNetwork {
 
   /// Receives a genome and returns its phenotype (a FeedForwardNetwork).
   static FeedForwardNetwork create(
-      {required Genome genome, required Config config}) {
+      {required Genome genome, required GenomeContext context}) {
     final connections = <ConnectionGeneKey>[];
     for (final cg in genome.connections.values) {
       if (cg.enabled == true) {
@@ -68,8 +63,8 @@ class FeedForwardNetwork implements NeuralNetwork {
     }
 
     final layers = Graphs.feedForwardLayers(
-        inputs: config.genome.inputKeys,
-        outputs: config.genome.outputKeys,
+        inputs: context.config.inputKeys,
+        outputs: context.config.outputKeys,
         connections: connections);
 
     var nodeEvals = <NeuralNetworkNode>[];
@@ -87,8 +82,8 @@ class FeedForwardNetwork implements NeuralNetwork {
 
         final ng = genome.nodes[node]!;
         final aggregationFunction =
-            config.genome.aggregationFunctionDefs[ng.aggregation]!;
-        final activationFunction = config.genome.activationDefs[ng.activation]!;
+          context.aggregationFunctionDefs[ng.aggregation]!;
+        final activationFunction = context.activationDefs[ng.activation]!;
         nodeEvals.add(NeuralNetworkNode(
             id: node,
             activationFunction: activationFunction,
@@ -100,8 +95,8 @@ class FeedForwardNetwork implements NeuralNetwork {
     }
 
     return FeedForwardNetwork(
-        inputNodes: config.genome.inputKeys,
-        outputNodes: config.genome.outputKeys,
+        inputNodes: context.config.inputKeys,
+        outputNodes: context.config.outputKeys,
         nodeEvals: nodeEvals);
   }
 }

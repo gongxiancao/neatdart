@@ -1,6 +1,5 @@
 import '../neural_network.dart';
 import '../genome.dart';
-import '../config.dart';
 import '../genes.dart';
 import '../graphs.dart';
 
@@ -28,7 +27,7 @@ class RecurrentNetwork implements NeuralNetwork {
 
       for (final node in nodeEvals) {
         v[node.id] = 0.0;
-        
+
         for (final input in node.inputs) {
           v[input.nodeId] = 0.0;
         }
@@ -76,9 +75,9 @@ class RecurrentNetwork implements NeuralNetwork {
     return outputs;
   }
 
-  static RecurrentNetwork create({required Genome genome, required Config config}) {
+  static RecurrentNetwork create({required Genome genome, required GenomeContext context}) {
     // Receives a genome and returns its phenotype (a RecurrentNetwork).
-    final genomeConfig = config.genome;
+    final genomeConfig = context.config;
     final required = Graphs.requiredForOutput(
       inputs: genomeConfig.inputKeys,
       outputs: genomeConfig.outputKeys,
@@ -110,8 +109,8 @@ class RecurrentNetwork implements NeuralNetwork {
       final nodeKey = entry.key;
       final inputs = entry.value;
       final node = genome.nodes[nodeKey]!;
-      final activationFunction = genomeConfig.activationDefs[node.activation];
-      final aggregationFunction = genomeConfig.aggregationFunctionDefs[node.aggregation];
+      final activationFunction = context.activationDefs[node.activation];
+      final aggregationFunction = context.aggregationFunctionDefs[node.aggregation];
       nodeEvals.add(NeuralNetworkNode(
         id: nodeKey,
         activationFunction: activationFunction!,

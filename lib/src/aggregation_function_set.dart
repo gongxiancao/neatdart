@@ -3,7 +3,8 @@ import 'aggregations.dart';
 typedef AggregationFunction = double Function(Iterable<double> x);
 
 class AggregationFunctionSet {
-  static Map<String, AggregationFunction> create() {
+  static Map<String, AggregationFunction> instance = _create();
+  static Map<String, AggregationFunction> _create() {
     var functions = <String, AggregationFunction>{};
     functions["product"] = productAggregation;
     functions["sum"] = sumAggregation;

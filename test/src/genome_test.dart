@@ -3,12 +3,9 @@ import 'package:neat_dart/src/config.dart';
 import 'package:neat_dart/src/genome.dart';
 import 'package:neat_dart/src/genes.dart';
 import 'package:neat_dart/src/attributes.dart';
-import 'package:neat_dart/src/aggregation_function_set.dart';
-import 'package:neat_dart/src/activation_function_set.dart';
 import 'package:neat_dart/src/reproduction.dart';
 import 'package:neat_dart/src/stagnation.dart';
 import 'package:neat_dart/src/species.dart';
-import 'package:neat_dart/src/aggregations.dart';
 
 void main() {
   Config? config;
@@ -85,8 +82,6 @@ void main() {
           ),
           compatibilityWeightCoefficient: 0.5
         ),
-        aggregationFunctionDefs: AggregationFunctionSet.create(),
-        activationDefs: ActivationFunctionSet.create()
       ),
       reproduction: ReproductionConfig(
         elitism: 2,
@@ -94,14 +89,14 @@ void main() {
         minSpeciesSize: 2
       ),
       stagnation: StagnationConfig(
-          speciesFitnessFunc: maxAggregation,
+          speciesFitness: 'max',
           maxStagnation: 20,
           speciesElitism: 1
       ),
       speciesSet: SpeciesSetConfig(
           compatibilityThreshold: 3.0
       ),
-      fitnessCriterion: maxAggregation
+      fitnessCriterion: 'max'
     );
 
     config2 = Config(
@@ -175,8 +170,6 @@ void main() {
           ),
           compatibilityWeightCoefficient: 0.5
         ),
-        aggregationFunctionDefs: AggregationFunctionSet.create(),
-        activationDefs: ActivationFunctionSet.create()
       ),
       reproduction: ReproductionConfig(
         elitism: 2,
@@ -184,14 +177,14 @@ void main() {
         minSpeciesSize: 2
       ),
       stagnation: StagnationConfig(
-        speciesFitnessFunc: maxAggregation,
+        speciesFitness: 'max',
         maxStagnation: 20,
         speciesElitism: 0
       ),
       speciesSet: SpeciesSetConfig(
         compatibilityThreshold: 3.0
       ),
-      fitnessCriterion: maxAggregation
+      fitnessCriterion: 'max'
     );
   });
 

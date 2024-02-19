@@ -9,12 +9,11 @@ import 'package:neat_dart/src/species.dart';
 import 'package:neat_dart/src/stagnation.dart';
 import 'package:neat_dart/src/aggregation_function_set.dart';
 import 'package:neat_dart/src/activation_function_set.dart';
-import 'package:neat_dart/src/aggregations.dart';
 import 'package:neat_dart/src/reporting.dart';
 
 class TestFitnessDelegate implements FitnessDelegate {
   @override
-  void evaluate({required Iterable<Genome> genomes, required Config config}) {
+  void evaluate({required Iterable<Genome> genomes, required GenomeContext context}) {
     for (final genome in genomes) {
       genome.fitness = 1.0;
     }
@@ -23,7 +22,6 @@ class TestFitnessDelegate implements FitnessDelegate {
 
 void main() {
   test('population validFitnessCriterion', () async {
-    final aggregationSet = AggregationFunctionSet.create();
     for (final c in ["max", "min", "mean"]) {
       // Load configuration.
       final config = Config(
@@ -97,8 +95,6 @@ void main() {
             ),
             compatibilityWeightCoefficient: 0.5
           ),
-          aggregationFunctionDefs: aggregationSet,
-          activationDefs: ActivationFunctionSet.create()
         ),
         reproduction: ReproductionConfig(
           elitism: 2,
@@ -106,18 +102,19 @@ void main() {
           minSpeciesSize: 2
         ),
         stagnation: StagnationConfig(
-          speciesFitnessFunc: maxAggregation,
+          speciesFitness: 'max',
           maxStagnation: 20,
           speciesElitism: 1
         ),
         speciesSet: SpeciesSetConfig(
           compatibilityThreshold: 3.0
         ),
-        fitnessCriterion: aggregationSet[c]!
+        fitnessCriterion: c
       );
 
+      final context = Context(config: config, aggregationFunctionDefs: AggregationFunctionSet.instance, activationDefs: ActivationFunctionSet.instance);
       final reporter = StdOutReporter();
-      final p = Population(config: config, reporter: reporter);
+      final p = Population(context: context, reporter: reporter);
       final fitnessDelegate = TestFitnessDelegate();
       p.run(fitnessDelegate: fitnessDelegate, generations: 10);
     }

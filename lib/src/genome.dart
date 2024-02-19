@@ -36,9 +36,6 @@ class GenomeConfig {
   final NodeGeneConfig node;
   final ConnectionGeneConfig connection;
 
-  final Map<String, double Function(Iterable<double>)> aggregationFunctionDefs;
-  final Map<String, double Function(double)> activationDefs;
-
   final List<int> inputKeys;
   final List<int> outputKeys;
 
@@ -61,9 +58,7 @@ class GenomeConfig {
     required this.connDeleteProb,
     required this.feedForward,
     required this.node,
-    required this.connection,
-    required this.aggregationFunctionDefs,
-    required this.activationDefs
+    required this.connection
   }): inputKeys = [], outputKeys = [] {
 
     // By convention, input pins have negative keys, and the output
@@ -85,6 +80,16 @@ class GenomeConfig {
   }
 }
 
+class GenomeContext {
+  final GenomeConfig config;
+  final Map<String, double Function(Iterable<double>)> aggregationFunctionDefs;
+  final Map<String, double Function(double)> activationDefs;
+  GenomeContext({
+    required this.config,
+    required this.aggregationFunctionDefs,
+    required this.activationDefs
+  });
+}
 
 class Genome {
   // dictionary for non-input nodes, as input nodes don't have any properties, no way to evolve them.

@@ -6,7 +6,7 @@ import 'species.dart';
 import 'stagnation.dart';
 
 abstract class FitnessDelegate {
-  void evaluate({required Iterable<Genome> genomes, required Config config});
+  void evaluate({required Iterable<Genome> genomes, required GenomeContext context});
 }
 
 class InvalidConfigException implements Exception {
@@ -29,8 +29,8 @@ class CompleteExtinctionException implements Exception {
 ///  4. Partition the new generation into species based on genetic similarity.
 ///  5. Go to 1.
 class Population {
-
-  final Config config;
+  final Context context;
+  Config get config => context.config;
   final BaseReporter reporter;
   int generation = 0;
   late Map<int, Genome> population;
@@ -38,13 +38,13 @@ class Population {
   Genome? bestGenome;
   Reproduction reproduction;
 
-  Population({required this.config, required this.reporter})
-    : reproduction = Reproduction(config: config.reproduction, reporter: reporter,
-        stagnation: Stagnation(config: config.stagnation, reporter: reporter)),
-      species = SpeciesSet(config: config.speciesSet, reporter: reporter)
+  Population({required this.context, required this.reporter})
+    : reproduction = Reproduction(config: context.config.reproduction, reporter: reporter,
+        stagnation: Stagnation(context: context.stagnation, reporter: reporter)),
+      species = SpeciesSet(config: context.config.speciesSet, reporter: reporter)
   {
-    population = reproduction.createNew(config.genome, config.popSize);
-    species.speciate(config: config, population: population, generation: generation);
+    population = reproduction.createNew(context.config.genome, context.config.popSize);
+    species.speciate(config: context.config, population: population, generation: generation);
   }
 
   /// Runs NEAT's genetic algorithm for at most n generations.  If n
@@ -73,7 +73,7 @@ class Population {
       reporter.startGeneration(generation);
 
       // Evaluate all genomes using the user-provided function.
-      fitnessDelegate.evaluate(genomes: population.values, config: config);
+      fitnessDelegate.evaluate(genomes: population.values, context: context.genome);
       // Gather and report statistics.
       Genome? best = getBestGenome();
 
@@ -121,7 +121,7 @@ class Population {
       fitnesses.add(g.fitness!);
     }
 
-    final fv = config.fitnessCriterion(fitnesses);
+    final fv = context.fitnessCriterion(fitnesses);
     if (config.fitnessThreshold != 0 && fv >= config.fitnessThreshold) {
       return true;
     }

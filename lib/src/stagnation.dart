@@ -4,22 +4,33 @@ import 'math_utils.dart';
 import 'reporting.dart';
 
 class StagnationConfig {
-  final double Function(List<double>) speciesFitnessFunc;
+  final String speciesFitness;
   final int maxStagnation;
   final int speciesElitism;
   StagnationConfig({
-    required this.speciesFitnessFunc,
+    required this.speciesFitness,
     required this.maxStagnation,
     required this.speciesElitism
   });
 }
 
+class StagnationContext {
+  final StagnationConfig config;
+  final double Function(List<double>) speciesFitness;
+  final Map<String, double Function(Iterable<double>)> aggregationFunctionDefs;
+  StagnationContext({
+    required this.config,
+    required this.aggregationFunctionDefs
+  }): speciesFitness = aggregationFunctionDefs[config.speciesFitness]!;
+}
+
 /// Keeps track of whether species are making progress and helps remove ones that are not.
 class Stagnation {
-  final StagnationConfig config;
+  final StagnationContext context;
+  StagnationConfig get config => context.config;
   final BaseReporter reporter;
 
-  Stagnation({required this.config, required this.reporter});
+  Stagnation({required this.context, required this.reporter});
 
   /// Required interface method. Updates species fitness history information,
   /// checking for ones that have not improved in maxStagnation generations,
@@ -37,7 +48,7 @@ class Stagnation {
           ? s.fitnessHistory.reduce(max)
           : -double.maxFinite;
 
-      s.fitness = config.speciesFitnessFunc(s.getFitnesses());
+      s.fitness = context.speciesFitness(s.getFitnesses());
       s.fitnessHistory.add(s.fitness!);
       s.adjustedFitness = null;
       if (s.fitness! > prevFitness) {
