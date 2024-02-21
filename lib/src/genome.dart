@@ -58,7 +58,7 @@ class GenomeConfig {
     required this.connDeleteProb,
     required this.feedForward,
     required this.node,
-    required this.connection
+    required this.connection,
   }): inputKeys = [], outputKeys = [] {
 
     // By convention, input pins have negative keys, and the output
@@ -78,6 +78,102 @@ class GenomeConfig {
 
     nodeIndexer =  outputKeys.reduce(max);
   }
+
+  factory GenomeConfig.fromJson(Map<String, dynamic> data) {
+    if (data case {
+      'numInputs': int numInputs,
+      'numOutputs': int numOutputs,
+      'numHidden': int numHidden,
+      'initialConnection': String initialConnection,
+      'connectionFraction': double connectionFraction,
+      'singleStructuralMutation': bool singleStructuralMutation,
+      'structuralMutationSurer': bool structuralMutationSurer,
+      'compatibilityDisjointCoefficient': double compatibilityDisjointCoefficient,
+      'nodeAddProb': double nodeAddProb,
+      'nodeDeleteProb': double nodeDeleteProb,
+      'connAddProb': double connAddProb,
+      'connDeleteProb': double connDeleteProb,
+      'feedForward': bool feedForward,
+      'node': Map<String, dynamic> node,
+      'connection': Map<String, dynamic> connection,
+    }) {
+      return GenomeConfig(
+        numInputs: numInputs,
+        numOutputs: numOutputs,
+        numHidden: numHidden,
+        initialConnection: InitialConnection.values.byName(initialConnection),
+        connectionFraction: connectionFraction,
+        singleStructuralMutation: singleStructuralMutation,
+        structuralMutationSurer: structuralMutationSurer,
+        compatibilityDisjointCoefficient: compatibilityDisjointCoefficient,
+        nodeAddProb: nodeAddProb,
+        nodeDeleteProb: nodeDeleteProb,
+        connAddProb: connAddProb,
+        connDeleteProb: connDeleteProb,
+        feedForward: feedForward,
+        node: NodeGeneConfig.fromJson(node),
+        connection: ConnectionGeneConfig.fromJson(connection),
+      );
+    }
+    throw FormatException('Invalid JSON: $data');
+  }
+
+  Map<String, dynamic> toJson() => {
+    'numInputs': numInputs,
+    'numOutputs': numOutputs,
+    'numHidden': numHidden,
+    'initialConnection': initialConnection.name,
+    'connectionFraction': connectionFraction,
+    'singleStructuralMutation': singleStructuralMutation,
+    'structuralMutationSurer': structuralMutationSurer,
+    'compatibilityDisjointCoefficient': compatibilityDisjointCoefficient,
+    'nodeAddProb': nodeAddProb,
+    'nodeDeleteProb': nodeDeleteProb,
+    'connAddProb': connAddProb,
+    'connDeleteProb': connDeleteProb,
+    'feedForward': feedForward,
+    'node': node.toJson(),
+    'connection': connection.toJson(),
+  };
+
+  @override
+  bool operator == (Object other) =>
+    other is GenomeConfig &&
+    other.runtimeType == runtimeType &&
+    other.numInputs == numInputs &&
+    other.numOutputs == numOutputs &&
+    other.numHidden == numHidden &&
+    other.initialConnection == initialConnection &&
+    other.connectionFraction == connectionFraction &&
+    other.singleStructuralMutation == singleStructuralMutation &&
+    other.structuralMutationSurer == structuralMutationSurer &&
+    other.compatibilityDisjointCoefficient == compatibilityDisjointCoefficient &&
+    other.nodeAddProb == nodeAddProb &&
+    other.nodeDeleteProb == nodeDeleteProb &&
+    other.connAddProb == connAddProb &&
+    other.connDeleteProb == connDeleteProb &&
+    other.feedForward == feedForward &&
+    other.node == node &&
+    other.connection == connection;
+
+  @override
+  int get hashCode => Object.hash(
+    numInputs,
+    numOutputs,
+    numHidden,
+    initialConnection,
+    connectionFraction,
+    singleStructuralMutation,
+    structuralMutationSurer,
+    compatibilityDisjointCoefficient,
+    nodeAddProb,
+    nodeDeleteProb,
+    connAddProb,
+    connDeleteProb,
+    feedForward,
+    node,
+    connection,
+  );
 }
 
 class GenomeContext {

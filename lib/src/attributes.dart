@@ -30,10 +30,71 @@ class FloatAttributeConfig {
     required this.minValue,
     required this.mutatePower,
     required this.mutateRate,
-    required this.replaceRate
+    required this.replaceRate,
   }):
     _initGaussianDistribution = NormalDistribution(source: RandomUtils.source, mean: mean, deviation: stdev),
     _mutateDistribution = NormalDistribution(source: RandomUtils.source, mean: 0, deviation: mutatePower);
+
+  factory FloatAttributeConfig.fromJson(Map<String, dynamic> data) {
+    if (data case {
+      'stdev': double stdev,
+      'mean': double mean,
+      'initType': String initType,
+      'maxValue': double maxValue,
+      'minValue': double minValue,
+      'mutatePower': double mutatePower,
+      'mutateRate': double mutateRate,
+      'replaceRate': double replaceRate,
+    }) {
+      return FloatAttributeConfig(
+        mean: mean,
+        stdev: stdev,
+        initType: DistributionType.values.byName(initType),
+        maxValue: maxValue,
+        minValue: minValue,
+        mutatePower: mutatePower,
+        mutateRate: mutateRate,
+        replaceRate: replaceRate,
+      );
+    }
+    throw FormatException('Invalid JSON: $data');
+  }
+
+  Map<String, dynamic> toJson() => {
+    'mean': mean,
+    'stdev': stdev,
+    'initType': initType.name,
+    'maxValue': maxValue,
+    'minValue': minValue,
+    'mutatePower': mutatePower,
+    'mutateRate': mutateRate,
+    'replaceRate': replaceRate,
+  };
+
+  @override
+  bool operator == (Object other) =>
+    other is FloatAttributeConfig &&
+    other.runtimeType == runtimeType &&
+    other.mean == mean &&
+    other.stdev == stdev &&
+    other.initType == initType &&
+    other.maxValue == maxValue &&
+    other.minValue == minValue &&
+    other.mutatePower == mutatePower &&
+    other.mutateRate == mutateRate &&
+    other.replaceRate == replaceRate;
+
+  @override
+  int get hashCode => Object.hash(
+    mean,
+    stdev,
+    initType,
+    maxValue,
+    minValue,
+    mutatePower,
+    mutateRate,
+    replaceRate,
+  );
 
   double clamp(double value) {
     return max(min(value, maxValue), minValue);
@@ -88,8 +149,49 @@ class BoolAttributeConfig {
     this.defaultValue,
     required this.mutateRate,
     required this.rateToTrueAdd,
-    required this.rateToFalseAdd
+    required this.rateToFalseAdd,
   });
+
+  factory BoolAttributeConfig.fromJson(Map<String, dynamic> data) {
+    if (data case {
+      'defaultValue': bool? defaultValue,
+      'mutateRate': double mutateRate,
+      'rateToTrueAdd': double rateToTrueAdd,
+      'rateToFalseAdd': double rateToFalseAdd,
+    }) {
+      return BoolAttributeConfig(
+        defaultValue: defaultValue,
+        mutateRate: mutateRate,
+        rateToTrueAdd: rateToTrueAdd,
+        rateToFalseAdd: rateToFalseAdd,
+      );
+    }
+    throw FormatException('Invalid JSON: $data');
+  }
+
+  Map<String, dynamic> toJson() => {
+    'defaultValue': defaultValue,
+    'mutateRate': mutateRate,
+    'rateToTrueAdd': rateToTrueAdd,
+    'rateToFalseAdd': rateToFalseAdd,
+  };
+
+  @override
+  bool operator == (Object other) =>
+    other is BoolAttributeConfig &&
+    other.runtimeType == runtimeType &&
+    other.defaultValue == defaultValue &&
+    other.mutateRate == mutateRate &&
+    other.rateToTrueAdd == rateToTrueAdd &&
+    other.rateToFalseAdd == rateToFalseAdd;
+
+  @override
+  int get hashCode => Object.hash(
+    defaultValue,
+    mutateRate,
+    rateToTrueAdd,
+    rateToFalseAdd,
+  );
 
   bool initValue() {
     return defaultValue ?? RandomUtils.nextDouble() < 0.5;
@@ -137,6 +239,42 @@ class StringAttributeConfig {
     String? defaultValue,
     required this.mutateRate
   }): defaultValue = defaultValue != null && options.contains(defaultValue) ? defaultValue : null;
+
+  factory StringAttributeConfig.fromJson(Map<String, dynamic> data) {
+    if (data case {
+      'options': List<String> options,
+      'defaultValue': String? defaultValue,
+      'mutateRate': double mutateRate,
+    }) {
+      return StringAttributeConfig(
+        options: options,
+        defaultValue: defaultValue,
+        mutateRate: mutateRate,
+      );
+    }
+    throw FormatException('Invalid JSON: $data');
+  }
+
+  Map<String, dynamic> toJson() => {
+    'options': options,
+    'defaultValue': defaultValue,
+    'mutateRate': mutateRate,
+  };
+
+  @override
+  bool operator == (Object other) =>
+    other is StringAttributeConfig &&
+    other.runtimeType == runtimeType &&
+    other.options == options &&
+    other.defaultValue == defaultValue &&
+    other.mutateRate == mutateRate;
+
+  @override
+  int get hashCode => Object.hash(
+    options,
+    defaultValue,
+    mutateRate,
+  );
 
   String initValue() {
     return defaultValue ?? RandomUtils.choice(options);

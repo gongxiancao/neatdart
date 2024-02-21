@@ -10,8 +10,44 @@ class StagnationConfig {
   StagnationConfig({
     required this.speciesFitness,
     required this.maxStagnation,
-    required this.speciesElitism
+    required this.speciesElitism,
   });
+
+  factory StagnationConfig.fromJson(Map<String, dynamic> data) {
+    if (data case {
+      'speciesFitness': String speciesFitness,
+      'maxStagnation': int maxStagnation,
+      'speciesElitism': int speciesElitism,
+    }) {
+      return StagnationConfig(
+        speciesFitness: speciesFitness,
+        maxStagnation: maxStagnation,
+        speciesElitism: speciesElitism,
+      );
+    }
+    throw FormatException('Invalid JSON: $data');
+  }
+
+  Map<String, dynamic> toJson() => {
+    'speciesFitness': speciesFitness,
+    'maxStagnation': maxStagnation,
+    'speciesElitism': speciesElitism,
+  };
+
+  @override
+  bool operator == (Object other) =>
+    other is StagnationConfig &&
+    other.runtimeType == runtimeType &&
+    other.speciesFitness == speciesFitness &&
+    other.maxStagnation == maxStagnation &&
+    other.speciesElitism == speciesElitism;
+
+  @override
+  int get hashCode => Object.hash(
+    speciesFitness,
+    maxStagnation,
+    speciesElitism,
+  );
 }
 
 class StagnationContext {

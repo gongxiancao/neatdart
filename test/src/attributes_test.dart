@@ -19,6 +19,9 @@ void main() {
     newValue = config.mutateValue(newValue);
     newValue = config.mutateValue(newValue);
     expect(newValue, isNot(equals(value)));
+
+    final configJson = config.toJson();
+    expect(configJson['initType'] as String, equals('normal'));
   });
 
   test('BoolAttributeConfig test', () {

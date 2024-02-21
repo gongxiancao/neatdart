@@ -17,6 +17,42 @@ class ReproductionConfig {
     required this.survivalThreshold,
     required this.minSpeciesSize,
   });
+
+  factory ReproductionConfig.fromJson(Map<String, dynamic> data) {
+    if (data case {
+      'elitism': int elitism,
+      'survivalThreshold': double survivalThreshold,
+      'minSpeciesSize': int minSpeciesSize
+    }) {
+      return ReproductionConfig(
+        elitism: elitism,
+        survivalThreshold: survivalThreshold,
+        minSpeciesSize: minSpeciesSize
+      );
+    }
+    throw FormatException('Invalid JSON: $data');
+  }
+
+  Map<String, dynamic> toJson() => {
+    'elitism': elitism,
+    'survivalThreshold': survivalThreshold,
+    'minSpeciesSize': minSpeciesSize
+  };
+
+  @override
+  bool operator == (Object other) =>
+    other is ReproductionConfig &&
+    other.runtimeType == runtimeType &&
+    other.elitism == elitism &&
+    other.survivalThreshold == survivalThreshold &&
+    other.minSpeciesSize == minSpeciesSize;
+
+  @override
+  int get hashCode => Object.hash(
+    elitism,
+    survivalThreshold,
+    minSpeciesSize,
+  );
 }
 
 class Reproduction {

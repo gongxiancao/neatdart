@@ -18,8 +18,54 @@ class NodeGeneConfig {
     required this.response,
     required this.activation,
     required this.aggregation,
-    required this.compatibilityWeightCoefficient
+    required this.compatibilityWeightCoefficient,
   });
+
+  factory NodeGeneConfig.fromJson(Map<String, dynamic> data) {
+    if (data case {
+      'bias': Map<String, dynamic> bias,
+      'response': Map<String, dynamic> response,
+      'activation': Map<String, dynamic> activation,
+      'aggregation': Map<String, dynamic> aggregation,
+      'compatibilityWeightCoefficient': double compatibilityWeightCoefficient,
+    }) {
+      return NodeGeneConfig(
+        bias: FloatAttributeConfig.fromJson(bias),
+        response: FloatAttributeConfig.fromJson(response),
+        activation: StringAttributeConfig.fromJson(activation),
+        aggregation: StringAttributeConfig.fromJson(aggregation),
+        compatibilityWeightCoefficient: compatibilityWeightCoefficient,
+      );
+    }
+    throw FormatException('Invalid JSON: $data');
+  }
+
+  Map<String, dynamic> toJson() => {
+    'bias': bias.toJson(),
+    'response': response.toJson(),
+    'activation': activation.toJson(),
+    'aggregation': aggregation.toJson(),
+    'compatibilityWeightCoefficient': compatibilityWeightCoefficient,
+  };
+
+  @override
+  bool operator == (Object other) =>
+    other is NodeGeneConfig &&
+    other.runtimeType == runtimeType &&
+    other.bias == bias &&
+    other.response == response &&
+    other.activation == activation &&
+    other.aggregation == aggregation &&
+    other.compatibilityWeightCoefficient == compatibilityWeightCoefficient;
+
+  @override
+  int get hashCode => Object.hash(
+    bias,
+    response,
+    activation,
+    aggregation,
+    compatibilityWeightCoefficient,
+  );
 }
 
 class NodeGene extends BaseGene<int> {
@@ -100,8 +146,44 @@ class ConnectionGeneConfig {
   ConnectionGeneConfig({
     required this.weight,
     required this.enabled,
-    required this.compatibilityWeightCoefficient
+    required this.compatibilityWeightCoefficient,
   });
+
+  factory ConnectionGeneConfig.fromJson(Map<String, dynamic> data) {
+    if (data case {
+      'weight': Map<String, dynamic> weight,
+      'enabled': Map<String, dynamic> enabled,
+      'compatibilityWeightCoefficient': double compatibilityWeightCoefficient,
+    }) {
+      return ConnectionGeneConfig(
+          weight: FloatAttributeConfig.fromJson(weight),
+          enabled: BoolAttributeConfig.fromJson(enabled),
+          compatibilityWeightCoefficient: compatibilityWeightCoefficient,
+      );
+    }
+    throw FormatException('Invalid JSON: $data');
+  }
+
+  Map<String, dynamic> toJson() => {
+    'weight': weight.toJson(),
+    'enabled': enabled.toJson(),
+    'compatibilityWeightCoefficient': compatibilityWeightCoefficient,
+  };
+
+  @override
+  bool operator == (Object other) =>
+    other is ConnectionGeneConfig &&
+    other.runtimeType == runtimeType &&
+    other.weight == weight &&
+    other.enabled == enabled &&
+    other.compatibilityWeightCoefficient == compatibilityWeightCoefficient;
+
+  @override
+  int get hashCode => Object.hash(
+    weight,
+    enabled,
+    compatibilityWeightCoefficient,
+  );
 }
 
 class ConnectionGeneKey {
@@ -121,10 +203,17 @@ class ConnectionGeneKey {
   }
 
   @override
-  bool operator == (other) => other is ConnectionGeneKey && inputKey == other.inputKey && outputKey == other.outputKey;
+  bool operator == (other) =>
+    other is ConnectionGeneKey &&
+    other.runtimeType == runtimeType &&
+    inputKey == other.inputKey &&
+    outputKey == other.outputKey;
 
   @override
-  int get hashCode => Object.hash(inputKey, outputKey);
+  int get hashCode => Object.hash(
+    inputKey,
+    outputKey
+  );
 
   static List<ConnectionGeneKey> fromTuples(List<(int, int)> tuples) {
     final result = <ConnectionGeneKey>[];

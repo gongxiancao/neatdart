@@ -68,6 +68,30 @@ class GenomeDistanceCache {
 class SpeciesSetConfig {
   final double compatibilityThreshold;
   SpeciesSetConfig({required this.compatibilityThreshold});
+
+  factory SpeciesSetConfig.fromJson(Map<String, dynamic> data) {
+    if (data case {
+      'compatibilityThreshold': double compatibilityThreshold,
+    }) {
+      return SpeciesSetConfig(
+          compatibilityThreshold: compatibilityThreshold
+      );
+    }
+    throw FormatException('Invalid JSON: $data');
+  }
+
+  Map<String, dynamic> toJson() => {
+    'compatibilityThreshold': compatibilityThreshold,
+  };
+
+  @override
+  bool operator == (Object other) =>
+    other is SpeciesSetConfig &&
+    other.runtimeType == runtimeType &&
+    other.compatibilityThreshold == compatibilityThreshold;
+
+  @override
+  int get hashCode => compatibilityThreshold.hashCode;
 }
 
 /// Encapsulates the default speciation scheme.

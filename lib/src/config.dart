@@ -25,6 +25,72 @@ class Config {
     required this.speciesSet,
     required this.fitnessCriterion,
   });
+
+  factory Config.fromJson(Map<String, dynamic> data) {
+    if (data case {
+      'noFitnessTermination': bool noFitnessTermination,
+      'fitnessThreshold': double fitnessThreshold,
+      'popSize': int popSize,
+      'resetOnExtinction': bool resetOnExtinction,
+      'genome': Map<String, dynamic> genome,
+      'reproduction': Map<String, dynamic> reproduction,
+      'stagnation': Map<String, dynamic> stagnation,
+      'speciesSet': Map<String, dynamic> speciesSet,
+      'fitnessCriterion': String fitnessCriterion,
+    }) {
+      return Config(
+        noFitnessTermination: noFitnessTermination,
+        fitnessThreshold: fitnessThreshold,
+        popSize: popSize,
+        resetOnExtinction: resetOnExtinction,
+        genome: GenomeConfig.fromJson(genome),
+        reproduction: ReproductionConfig.fromJson(reproduction),
+        stagnation: StagnationConfig.fromJson(stagnation),
+        speciesSet: SpeciesSetConfig.fromJson(speciesSet),
+        fitnessCriterion: fitnessCriterion,
+      );
+    }
+    throw FormatException('Invalid JSON: $data');
+  }
+
+  Map<String, dynamic> toJson() => {
+    'noFitnessTermination': noFitnessTermination,
+    'fitnessThreshold': fitnessThreshold,
+    'popSize': popSize,
+    'resetOnExtinction': resetOnExtinction,
+    'genome': genome.toJson(),
+    'reproduction': reproduction.toJson(),
+    'stagnation': stagnation.toJson(),
+    'speciesSet': speciesSet.toJson(),
+    'fitnessCriterion': fitnessCriterion,
+  };
+
+  @override
+  bool operator == (Object other) =>
+    other is Config &&
+    other.runtimeType == runtimeType &&
+    other.noFitnessTermination == noFitnessTermination &&
+    other.fitnessThreshold == fitnessThreshold &&
+    other.popSize == popSize &&
+    other.resetOnExtinction == resetOnExtinction &&
+    other.genome == genome &&
+    other.reproduction == reproduction &&
+    other.stagnation == stagnation &&
+    other.speciesSet == speciesSet &&
+    other.fitnessCriterion == fitnessCriterion;
+
+  @override
+  int get hashCode => Object.hash(
+    noFitnessTermination,
+    fitnessThreshold,
+    popSize,
+    resetOnExtinction,
+    genome,
+    reproduction,
+    stagnation,
+    speciesSet,
+    fitnessCriterion,
+  );
 }
 
 class Context {
