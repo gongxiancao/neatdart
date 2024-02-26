@@ -41,7 +41,7 @@ class FeedForwardNetwork implements NeuralNetwork {
     for (final node in nodeEvals) {
       final nodeInputs = <double>[];
       for (final input in node.inputs) {
-        nodeInputs.add(values[input.nodeId]! * input.weight);
+        nodeInputs.add((values[input.nodeId] ?? 0) * input.weight);
       }
       final s = node.aggregationFunction(nodeInputs);
       values[node.id] = node.activationFunction(node.bias + node.response * s);
@@ -64,7 +64,12 @@ class FeedForwardNetwork implements NeuralNetwork {
       }
     }
 
-    final layers = Graphs.feedForwardLayers(
+    final layers = context.config.recurrent ?
+      Graphs.recurrentLayers(
+        inputs: config.inputKeys,
+        outputs: config.outputKeys,
+        connections: connections) :
+      Graphs.feedForwardLayers(
         inputs: config.inputKeys,
         outputs: config.outputKeys,
         connections: connections);

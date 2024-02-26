@@ -76,17 +76,16 @@ void main() {
 
   test('feed_forward_network create recurrent', () async {
     final genome = Genome.fromJson({
-      "key":271,
+      "key":162,
       "nodes":[
-        {"key":0,"bias":1.5743833678079289,"response":1.0,"activation":"sigmoid","aggregation":"sum"},
-        {"key":24,"bias":1.568008604844422,"response":1.0,"activation":"sigmoid","aggregation":"sum"}
+        {"key":0,"bias":-0.5714219216242203,"response":1.0,"activation":"sigmoid","aggregation":"sum"},
+        {"key":1,"bias":-0.6148081342307077,"response":1.0,"activation":"sigmoid","aggregation":"sum"}
       ],
       "connections":[
-        {"key":{"inputKey":-2,"outputKey":0},"weight":-2.200709306667263,"enabled":true},
-        {"key":{"inputKey":0,"outputKey":0},"weight":1.131089768821733,"enabled":false},
-        {"key":{"inputKey":0,"outputKey":24},"weight":1.3779269036034585,"enabled":true},
-        {"key":{"inputKey":24,"outputKey":0},"weight":1.1725223120680397,"enabled":true},
-        {"key":{"inputKey":24,"outputKey":24},"weight":0.7437908062729364,"enabled":true}
+        {"key":{"inputKey":-1,"outputKey":0},"weight":-1.0082926921189594,"enabled":true},
+        {"key":{"inputKey":-2,"outputKey":1},"weight":0.2352249446561927,"enabled":true},
+        {"key":{"inputKey":1,"outputKey":0},"weight":0.46236391582809455,"enabled":true},
+        {"key":{"inputKey":1,"outputKey":1},"weight":1.5418492586332098,"enabled":true}
       ],
       "fitness":4.0
     });
@@ -103,7 +102,7 @@ void main() {
       nodeDeleteProb: 0.2,
       connAddProb: 0.5,
       connDeleteProb: 0.5,
-      feedForward: false,
+      recurrent: true,
       node: NodeGeneConfig(
           bias: FloatAttributeConfig(
               mean: 0.0,
@@ -158,6 +157,6 @@ void main() {
       ),
     );
     final nn = FeedForwardNetwork.create(genome: genome, context: GenomeContext(config: config, state: GenomeState(), aggregationFunctionDefs: AggregationFunctionSet.instance, activationDefs: ActivationFunctionSet.instance));
-    print('nn: inputNodes: ${nn.inputNodes}, outputNodes: ${nn.outputNodes}, nodeEvals:${nn.nodeEvals}, values:${nn.values}');
+    expect(nn.values.containsKey(1), true);
   });
 }

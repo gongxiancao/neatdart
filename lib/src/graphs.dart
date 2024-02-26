@@ -5,10 +5,13 @@ class Graphs {
   /// Returns true if the addition of the 'test' connection would create a cycle,
   /// assuming that no cycle already exists in the graph represented by 'connections'.
   ///
-  static bool createsCycle(List<ConnectionGeneKey> connections, ConnectionGeneKey test) {
+  static bool createsCycle(List<ConnectionGeneKey> connections, ConnectionGeneKey test, bool allowRecurrent) {
     final i = test.inputKey;
     final o = test.outputKey;
     if (i == o) {
+      if (allowRecurrent) {
+        return false;
+      }
       return true;
     }
 
@@ -30,6 +33,15 @@ class Graphs {
         return false;
       }
     }
+  }
+
+  static bool hasRecurrentConnection(Iterable<ConnectionGeneKey> connections) {
+    for (final connection in connections) {
+      if (connection.inputKey == connection.outputKey) {
+        return true;
+      }
+    }
+    return false;
   }
 
   ///  Collect the nodes whose state is required to compute the final network output(s).

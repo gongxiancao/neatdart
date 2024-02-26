@@ -21,7 +21,7 @@ void main() {
         nodeDeleteProb: 0.2,
         connAddProb: 0.5,
         connDeleteProb: 0.5,
-        feedForward: true,
+        recurrent: false,
         node: NodeGeneConfig(
           bias: FloatAttributeConfig(
             mean: 0.0,

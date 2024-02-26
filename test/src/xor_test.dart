@@ -3,6 +3,7 @@ import 'package:neat_dart/src/reproduction.dart';
 import 'package:neat_dart/src/population.dart';
 import 'package:neat_dart/src/genome.dart';
 import 'package:neat_dart/src/genes.dart';
+import 'package:neat_dart/src/graphs.dart';
 import 'package:neat_dart/src/config.dart';
 import 'package:neat_dart/src/species.dart';
 import 'package:neat_dart/src/stagnation.dart';
@@ -46,29 +47,41 @@ class XorRecurrentFitnessDelegate implements FitnessDelegate {
     [[1.0, 0.0], [1.0, 0.0], [0.0, 1.0]],
     [[1.0, 0.0], [0.0, 0.0], [0.0, 1.0]],
   ];
-  List<List<double>> xorOutputs = [   [0.0],     [1.0],     [1.0],     [0.0]];
+  List<List<double>> xorOutputs = [   [0.0],     [1.0],     [0.0],     [1.0]];
+
+  bool log = false;
 
   XorRecurrentFitnessDelegate();
 
   void evaluateGenome({required Genome genome, required GenomeContext context}) {
     genome.fitness = 4.0;
     final net = FeedForwardNetwork.create(genome: genome, context: context);
-    print("begin evaluate ${genome.key}: ${jsonEncode(genome.toJson())}");
+    if (log) {
+      print("begin evaluate ${genome.key}, hasRecurrentConnection: ${Graphs
+          .hasRecurrentConnection(
+          genome.connections.keys)}, Genome: ${jsonEncode(genome.toJson())}");
+    }
     for (final (index, xi) in xorInputs.indexed) {
       List<double>? actualOutput;
       // recurrent network has memory so activating multiple times will produce
       // different results.
       for (final xii in xi) {
-        print("net: ${net.values}");
+        if (log) {
+          print("net: ${net.values}");
+        }
         actualOutput = net.activate(xii);
-        print("input: $xii, output: $actualOutput");
+        if (log) {
+          print("input: $xii, output: $actualOutput");
+        }
       }
 
       final expectedOutput = xorOutputs[index];
       // print('output: $output, xo: $xo');
       genome.fitness = genome.fitness! - (actualOutput![0] - expectedOutput[0]) * (actualOutput[0] - expectedOutput[0]);
     }
-    // print('genome.fitness: ${genome.fitness}');
+    if (log) {
+      print('genome.fitness: ${genome.fitness}');
+    }
   }
 
   @override
@@ -99,7 +112,7 @@ void main() {
           nodeDeleteProb: 0.2,
           connAddProb: 0.5,
           connDeleteProb: 0.5,
-          feedForward: true,
+          recurrent: false,
           node: NodeGeneConfig(
               bias: FloatAttributeConfig(
                   mean: 0.0,
@@ -324,7 +337,7 @@ void main() {
     expect(genome.fitness, closeTo(3.9, 0.1));
   });
 
-  test('xor with feedForward', () async {
+  test('xor with recurrent = false', () async {
     // This is an example of a functional test case.
     // Use XCTAssert and related functions to verify your tests produce the correct results.
 
@@ -340,11 +353,12 @@ void main() {
     expect(winner.fitness, closeTo(3.9, 0.1));
   });
 
-  test('xor with recurrent (feedForward = false)', () async {
+  test('xor with recurrent recurrent = true ', () async {
     // This is an example of a functional test case.
     // Use XCTAssert and related functions to verify your tests produce the correct results.
     final newConfig = Config.fromJson(config.toJson());
-    newConfig.genome.feedForward = false;
+    newConfig.genome.recurrent = true;
+    newConfig.fitnessThreshold = 3.9;
     // Create the population, which is the top-level object for a NEAT run.
     final context = Context(config: newConfig, state: State(), aggregationFunctionDefs: AggregationFunctionSet.instance, activationDefs: ActivationFunctionSet.instance);
     final reporter = StdOutReporter();
@@ -352,9 +366,9 @@ void main() {
 
     final fitnessDelegate = XorRecurrentFitnessDelegate();
     // Run for up to 100 generations.
-    final winner = p.run(fitnessDelegate: fitnessDelegate, generations: 10);
-
+    final winner = p.run(fitnessDelegate: fitnessDelegate, generations: 100);
+    fitnessDelegate.log = true;
+    fitnessDelegate.evaluateGenome(genome: winner, context: context.genome);
     expect(winner.fitness, closeTo(3.9, 0.1));
-
   });
 }

@@ -32,7 +32,7 @@ class GenomeConfig {
   double nodeDeleteProb;
   double connAddProb;
   double connDeleteProb;
-  bool feedForward;
+  bool recurrent;
   NodeGeneConfig node;
   ConnectionGeneConfig connection;
 
@@ -54,7 +54,7 @@ class GenomeConfig {
     required this.nodeDeleteProb,
     required this.connAddProb,
     required this.connDeleteProb,
-    required this.feedForward,
+    required this.recurrent,
     required this.node,
     required this.connection,
   }): inputKeys = [], outputKeys = [] {
@@ -89,7 +89,7 @@ class GenomeConfig {
       'nodeDeleteProb': double nodeDeleteProb,
       'connAddProb': double connAddProb,
       'connDeleteProb': double connDeleteProb,
-      'feedForward': bool feedForward,
+      'recurrent': bool recurrent,
       'node': Map<String, dynamic> node,
       'connection': Map<String, dynamic> connection,
     }) {
@@ -106,7 +106,7 @@ class GenomeConfig {
         nodeDeleteProb: nodeDeleteProb,
         connAddProb: connAddProb,
         connDeleteProb: connDeleteProb,
-        feedForward: feedForward,
+        recurrent: recurrent,
         node: NodeGeneConfig.fromJson(node),
         connection: ConnectionGeneConfig.fromJson(connection),
       );
@@ -127,7 +127,7 @@ class GenomeConfig {
     'nodeDeleteProb': nodeDeleteProb,
     'connAddProb': connAddProb,
     'connDeleteProb': connDeleteProb,
-    'feedForward': feedForward,
+    'recurrent': recurrent,
     'node': node.toJson(),
     'connection': connection.toJson(),
   };
@@ -148,7 +148,7 @@ class GenomeConfig {
     other.nodeDeleteProb == nodeDeleteProb &&
     other.connAddProb == connAddProb &&
     other.connDeleteProb == connDeleteProb &&
-    other.feedForward == feedForward &&
+    other.recurrent == recurrent &&
     other.node == node &&
     other.connection == connection;
 
@@ -166,7 +166,7 @@ class GenomeConfig {
     nodeDeleteProb,
     connAddProb,
     connDeleteProb,
-    feedForward,
+    recurrent,
     node,
     connection,
   );
@@ -408,8 +408,9 @@ class Genome {
     }
 
     // For recurrent genomes, include node self-connections.
-    if (!config.feedForward) {
-      for (var i in nodes.keys) {
+    if (config.recurrent) {
+      final hiddenNodes = Set<int>.from(nodes.keys).difference(Set<int>.from(config.outputKeys));
+      for (var i in hiddenNodes) {
         connections.add(ConnectionGeneKey(i, i));
       }
     }
@@ -460,7 +461,7 @@ class Genome {
 
   /// Mutates this genome.
   void mutate(GenomeConfig config, GenomeState state) {
-    print('mutate $key');
+    // print('mutate $key');
     if (config.singleStructuralMutation) {
       final div = max(1, (config.nodeAddProb + config.nodeDeleteProb + config.connAddProb + config.connDeleteProb));
       final r = RandomUtils.nextDouble();
@@ -544,10 +545,10 @@ class Genome {
   /// Attempt to add a new connection, the only restriction being that the output
   /// node cannot be one of the network input pins.
   void mutateAddConnection(GenomeConfig config) {
-    final possibleOutputs = List<int>.from(nodes.keys);
+    final possibleOutputs = Set<int>.from(nodes.keys);
     final outNode = RandomUtils.choice(possibleOutputs);
 
-    final possibleInputs = possibleOutputs + config.inputKeys;
+    final possibleInputs = possibleOutputs.union(Set<int>.from(config.inputKeys)).difference(Set<int>.from(config.outputKeys));
     final inNode = RandomUtils.choice(possibleInputs);
 
   // Don't duplicate connections.
@@ -569,18 +570,13 @@ class Genome {
     // No need to check for connections between input nodes:
     // they cannot be the output end of a connection (see above).
 
-    // For feed-forward networks, avoid creating cycles.
-    bool hasCycle = Graphs.createsCycle(List<ConnectionGeneKey>.from(connections.keys), key);
-    if (config.feedForward && Graphs.createsCycle(List<ConnectionGeneKey>.from(connections.keys), key)) {
+    // Avoid creating cycles.
+    if (Graphs.createsCycle(List<ConnectionGeneKey>.from(connections.keys), key, config.recurrent)) {
       return;
     }
 
     final newCg = createConnectionWithNodeKeys(config.connection, inNode, outNode);
     connections[newCg.key] = newCg;
-
-    if (hasCycle) {
-      print('got cycle: ${toJson()}');
-    }
   }
 
   int mutateDeleteNode(GenomeConfig config) {

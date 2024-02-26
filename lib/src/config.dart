@@ -4,15 +4,15 @@ import 'stagnation.dart';
 import 'reproduction.dart';
 
 class Config {
-  final bool noFitnessTermination;
-  final double fitnessThreshold;
-  final int popSize;
-  final bool resetOnExtinction;
-  final GenomeConfig genome;
-  final ReproductionConfig reproduction;
-  final StagnationConfig stagnation;
-  final SpeciesSetConfig speciesSet;
-  final String fitnessCriterion;
+  bool noFitnessTermination;
+  double fitnessThreshold;
+  int popSize;
+  bool resetOnExtinction;
+  GenomeConfig genome;
+  ReproductionConfig reproduction;
+  StagnationConfig stagnation;
+  SpeciesSetConfig speciesSet;
+  String fitnessCriterion;
 
   Config({
     required this.noFitnessTermination,
