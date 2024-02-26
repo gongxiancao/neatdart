@@ -1,3 +1,4 @@
+import 'package:neat_dart/neat_dart.dart';
 import 'package:test/test.dart';
 import 'package:neat_dart/src/config.dart';
 import 'package:neat_dart/src/genome.dart';
@@ -197,7 +198,7 @@ void main() {
 
     final g = Genome(gid);
     expect(gid, g.key);
-    g.configureNew(genomeConfig);
+    g.configureNew(genomeConfig, GenomeState());
 
     expect(Set<int>.from(g.nodes.keys), {0});
     expect(g.connections.length, 0);
@@ -212,7 +213,7 @@ void main() {
 
     final g = Genome(gid);
     expect(gid, g.key);
-    g.configureNew(genomeConfig);
+    g.configureNew(genomeConfig, GenomeState());
 
     expect(Set<int>.from(g.nodes.keys), {0, 1, 2});
     expect(g.connections.length, 0);
@@ -228,7 +229,7 @@ void main() {
 
     final g = Genome(gid);
     expect(gid, g.key);
-    g.configureNew(genomeConfig);
+    g.configureNew(genomeConfig, GenomeState());
 
     expect(Set<int>.from(g.nodes.keys), {0});
     expect(g.connections.length, 1);
@@ -243,7 +244,7 @@ void main() {
 
     final g = Genome(gid);
     expect(gid, g.key);
-    g.configureNew(genomeConfig);
+    g.configureNew(genomeConfig, GenomeState());
 
     expect(Set<int>.from(g.nodes.keys), {0, 1, 2});
     expect(g.connections.length, 1);
@@ -258,7 +259,7 @@ void main() {
 
     final g = Genome(gid);
     expect(gid, g.key);
-    g.configureNew(genomeConfig);
+    g.configureNew(genomeConfig, GenomeState());
 
     expect(Set<int>.from(g.nodes.keys), {0, 1, 2});
     expect(g.connections.length, 3);
@@ -274,7 +275,7 @@ void main() {
 
     final g = Genome(gid);
     expect(gid, g.key);
-    g.configureNew(genomeConfig);
+    g.configureNew(genomeConfig, GenomeState());
 
     expect(Set<int>.from(g.nodes.keys), {0});
     expect(g.connections.length, 2);
@@ -294,7 +295,7 @@ void main() {
 
     final g = Genome(gid);
     expect(gid, g.key);
-    g.configureNew(genomeConfig);
+    g.configureNew(genomeConfig, GenomeState());
 
     expect(Set<int>.from(g.nodes.keys), {0, 1, 2});
     expect(g.connections.length, 6);
@@ -325,7 +326,7 @@ void main() {
 
     final g = Genome(gid);
     expect(gid, g.key);
-    g.configureNew(genomeConfig);
+    g.configureNew(genomeConfig, GenomeState());
 
     print('$g');
     expect(Set<int>.from(g.nodes.keys), {0, 1, 2});
@@ -361,7 +362,7 @@ void main() {
 
     final g = Genome(gid);
     expect(gid, g.key);
-    g.configureNew(genomeConfig);
+    g.configureNew(genomeConfig, GenomeState());
 
     expect(Set<int>.from(g.nodes.keys), {0});
     expect(g.connections.length, lessThan(2));
@@ -377,7 +378,7 @@ void main() {
 
     final g = Genome(gid);
     expect(gid, g.key);
-    g.configureNew(genomeConfig);
+    g.configureNew(genomeConfig, GenomeState());
 
     expect(Set<int>.from(g.nodes.keys), {0, 1, 2});
     expect(g.connections.length, lessThan(6));
@@ -394,7 +395,7 @@ void main() {
 
     final g = Genome(gid);
     expect(gid, g.key);
-    g.configureNew(genomeConfig);
+    g.configureNew(genomeConfig, GenomeState());
 
     expect(Set<int>.from(g.nodes.keys), {0, 1, 2});
     expect(g.connections.length, lessThan(8));

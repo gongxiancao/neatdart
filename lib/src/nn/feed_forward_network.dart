@@ -9,10 +9,11 @@ class FeedForwardNetwork implements NeuralNetwork {
   final List<NeuralNetworkNode> nodeEvals;
   final values = <int, double>{};
 
-  FeedForwardNetwork(
-      {required this.inputNodes,
-      required this.outputNodes,
-      required this.nodeEvals}) {
+  FeedForwardNetwork({
+    required this.inputNodes,
+    required this.outputNodes,
+    required this.nodeEvals
+  }) {
     for (final input in inputNodes) {
       values[input] = 0.0;
     }
@@ -55,6 +56,7 @@ class FeedForwardNetwork implements NeuralNetwork {
   /// Receives a genome and returns its phenotype (a FeedForwardNetwork).
   static FeedForwardNetwork create(
       {required Genome genome, required GenomeContext context}) {
+    final config = context.config;
     final connections = <ConnectionGeneKey>[];
     for (final cg in genome.connections.values) {
       if (cg.enabled == true) {
@@ -63,8 +65,8 @@ class FeedForwardNetwork implements NeuralNetwork {
     }
 
     final layers = Graphs.feedForwardLayers(
-        inputs: context.config.inputKeys,
-        outputs: context.config.outputKeys,
+        inputs: config.inputKeys,
+        outputs: config.outputKeys,
         connections: connections);
 
     var nodeEvals = <NeuralNetworkNode>[];
@@ -95,8 +97,8 @@ class FeedForwardNetwork implements NeuralNetwork {
     }
 
     return FeedForwardNetwork(
-        inputNodes: context.config.inputKeys,
-        outputNodes: context.config.outputKeys,
+        inputNodes: config.inputKeys,
+        outputNodes: config.outputKeys,
         nodeEvals: nodeEvals);
   }
 }

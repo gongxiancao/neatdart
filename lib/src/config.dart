@@ -93,8 +93,40 @@ class Config {
   );
 }
 
+class State {
+  final GenomeState genome;
+  State({
+    genome
+  }): genome = genome ?? GenomeState();
+
+  factory State.fromJson(Map<String, dynamic> data) {
+    if (data case {
+    'genome': Map<String, dynamic> genome,
+    }) {
+      return State(
+        genome: GenomeState.fromJson(genome),
+      );
+    }
+    throw FormatException('Invalid JSON: $data');
+  }
+
+  Map<String, dynamic> toJson() => {
+    'genome': genome.toJson(),
+  };
+
+  @override
+  bool operator == (Object other) =>
+      other is State &&
+          other.runtimeType == runtimeType &&
+          other.genome == genome;
+
+  @override
+  int get hashCode => genome.hashCode;
+}
+
 class Context {
   final Config config;
+  final State state;
   final double Function(List<double>) fitnessCriterion;
   final Map<String, double Function(Iterable<double>)> aggregationFunctionDefs;
   final Map<String, double Function(double)> activationDefs;
@@ -102,9 +134,10 @@ class Context {
   final StagnationContext stagnation;
   Context({
     required this.config,
+    required this.state,
     required this.aggregationFunctionDefs,
     required this.activationDefs
   }): fitnessCriterion = aggregationFunctionDefs[config.fitnessCriterion]!,
-      genome = GenomeContext(config: config.genome, aggregationFunctionDefs: aggregationFunctionDefs, activationDefs: activationDefs),
+      genome = GenomeContext(config: config.genome, state: state.genome, aggregationFunctionDefs: aggregationFunctionDefs, activationDefs: activationDefs),
       stagnation = StagnationContext(config: config.stagnation, aggregationFunctionDefs: aggregationFunctionDefs);
 }

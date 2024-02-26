@@ -123,7 +123,7 @@ void main() {
   // Use XCTAssert and related functions to verify your tests produce the correct results.
 
   // Create the population, which is the top-level object for a NEAT run.
-  final context = Context(config: config, aggregationFunctionDefs: AggregationFunctionSet.instance, activationDefs: ActivationFunctionSet.instance);
+  final context = Context(config: config, state: State(), aggregationFunctionDefs: AggregationFunctionSet.instance, activationDefs: ActivationFunctionSet.instance);
   final reporter = StdOutReporter();
   final p = Population(context: context, reporter: reporter);
 

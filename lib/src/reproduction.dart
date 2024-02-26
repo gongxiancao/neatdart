@@ -73,12 +73,12 @@ class Reproduction {
     return genomeIndexer;
   }
 
-  Map<int, Genome> createNew(GenomeConfig genomeConfig, int popSize) {
+  Map<int, Genome> createNew(GenomeConfig config, GenomeState state, int popSize) {
     final newGenomes = <int, Genome>{};
     for (int i = 0; i < popSize; ++i) {
       final key = nextGenomeKey();
       final g = Genome(key);
-      g.configureNew(genomeConfig);
+      g.configureNew(config, state);
       newGenomes[key] = g;
     }
 
@@ -128,7 +128,7 @@ class Reproduction {
   /// Handles creation of genomes, either from scratch or by sexual or
   /// asexual reproduction from parents.
   Map<int, Genome> reproduce({
-    required Config config,
+    required Context context,
     required SpeciesSet speciesSet,
     required int popSize,
     required int generation
@@ -142,7 +142,7 @@ class Reproduction {
     // The average adjusted fitness scheme (normalized to the interval
     // [0, 1]) allows the use of negative fitness values without
     // interfering with the shared fitness scheme.
-
+    final config = context.config;
     final allFitnesses = <double>[];
     final remainingSpecies = <Species>[];
     for (final (stagSid, stagS, stagnant) in stagnation.update(speciesSet: speciesSet, generation: generation)) {
@@ -253,7 +253,7 @@ class Reproduction {
         final gid = nextGenomeKey();
         final child = Genome(gid);
         child.configureCrossover(parent1, parent2, config.genome);
-        child.mutate(config.genome);
+        child.mutate(context.genome.config, context.genome.state);
         newPopulation[gid] = child;
         ancestors[gid] = (parent1Id, parent2Id);
       }

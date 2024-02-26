@@ -11,12 +11,13 @@ import 'package:neat_dart/src/reporting.dart';
 import 'package:neat_dart/src/aggregation_function_set.dart';
 import 'package:neat_dart/src/activation_function_set.dart';
 import 'package:neat_dart/src/nn/feed_forward_network.dart';
+import 'dart:convert';
 
-class XorFitnessDelegate implements FitnessDelegate {
-  final List<List<double>> xorInputs;
-  final List<List<double>> xorOutputs;
+class XorFeedForwardFitnessDelegate implements FitnessDelegate {
+  final xorInputs = [[0.0, 0.0], [0.0, 1.0], [1.0, 0.0], [1.0, 1.0]];
+  final xorOutputs = [   [0.0],     [1.0],     [1.0],     [0.0]];
 
-  XorFitnessDelegate({required this.xorInputs, required this.xorOutputs});
+  XorFeedForwardFitnessDelegate();
 
   void evaluateGenome({required Genome genome, required GenomeContext context}) {
     genome.fitness = 4.0;
@@ -38,10 +39,47 @@ class XorFitnessDelegate implements FitnessDelegate {
   }
 }
 
-void main() {
-  final xorInputs = [[0.0, 0.0], [0.0, 1.0], [1.0, 0.0], [1.0, 1.0]];
-  final xorOutputs = [   [0.0],     [1.0],     [1.0],     [0.0]];
+class XorRecurrentFitnessDelegate implements FitnessDelegate {
+  List<List<List<double>>> xorInputs = [
+    [[0.0, 0.0], [0.0, 0.0], [0.0, 1.0]],
+    [[0.0, 0.0], [1.0, 0.0], [0.0, 1.0]],
+    [[1.0, 0.0], [1.0, 0.0], [0.0, 1.0]],
+    [[1.0, 0.0], [0.0, 0.0], [0.0, 1.0]],
+  ];
+  List<List<double>> xorOutputs = [   [0.0],     [1.0],     [1.0],     [0.0]];
 
+  XorRecurrentFitnessDelegate();
+
+  void evaluateGenome({required Genome genome, required GenomeContext context}) {
+    genome.fitness = 4.0;
+    final net = FeedForwardNetwork.create(genome: genome, context: context);
+    print("begin evaluate ${genome.key}: ${jsonEncode(genome.toJson())}");
+    for (final (index, xi) in xorInputs.indexed) {
+      List<double>? actualOutput;
+      // recurrent network has memory so activating multiple times will produce
+      // different results.
+      for (final xii in xi) {
+        print("net: ${net.values}");
+        actualOutput = net.activate(xii);
+        print("input: $xii, output: $actualOutput");
+      }
+
+      final expectedOutput = xorOutputs[index];
+      // print('output: $output, xo: $xo');
+      genome.fitness = genome.fitness! - (actualOutput![0] - expectedOutput[0]) * (actualOutput[0] - expectedOutput[0]);
+    }
+    // print('genome.fitness: ${genome.fitness}');
+  }
+
+  @override
+  void evaluate({required Iterable<Genome> genomes, required GenomeContext context}) {
+    for (final genome in genomes) {
+      evaluateGenome(genome: genome, context: context);
+    }
+  }
+}
+
+void main() {
   // Load configuration.
   final config = Config(
       noFitnessTermination: false,
@@ -280,25 +318,43 @@ void main() {
       "fitness" : 0
     };
     final genome = Genome.fromJson(genomeData);
-    final fitnessDelegate = XorFitnessDelegate(xorInputs: xorInputs, xorOutputs: xorOutputs);
-    final context = GenomeContext(config: config.genome, aggregationFunctionDefs: AggregationFunctionSet.instance, activationDefs: ActivationFunctionSet.instance);
+    final fitnessDelegate = XorFeedForwardFitnessDelegate();
+    final context = GenomeContext(config: config.genome, state: GenomeState(), aggregationFunctionDefs: AggregationFunctionSet.instance, activationDefs: ActivationFunctionSet.instance);
     fitnessDelegate.evaluateGenome(genome: genome, context: context);
     expect(genome.fitness, closeTo(3.9, 0.1));
   });
 
-  test('xor xor', () async {
+  test('xor with feedForward', () async {
     // This is an example of a functional test case.
     // Use XCTAssert and related functions to verify your tests produce the correct results.
 
     // Create the population, which is the top-level object for a NEAT run.
-    final context = Context(config: config, aggregationFunctionDefs: AggregationFunctionSet.instance, activationDefs: ActivationFunctionSet.instance);
+    final context = Context(config: config, state: State(), aggregationFunctionDefs: AggregationFunctionSet.instance, activationDefs: ActivationFunctionSet.instance);
     final reporter = StdOutReporter();
     final p = Population(context: context, reporter: reporter);
 
-    final fitnessDelegate = XorFitnessDelegate(xorInputs: xorInputs, xorOutputs: xorOutputs);
+    final fitnessDelegate = XorFeedForwardFitnessDelegate();
     // Run for up to 100 generations.
     final winner = p.run(fitnessDelegate: fitnessDelegate, generations: 100);
 
     expect(winner.fitness, closeTo(3.9, 0.1));
+  });
+
+  test('xor with recurrent (feedForward = false)', () async {
+    // This is an example of a functional test case.
+    // Use XCTAssert and related functions to verify your tests produce the correct results.
+    final newConfig = Config.fromJson(config.toJson());
+    newConfig.genome.feedForward = false;
+    // Create the population, which is the top-level object for a NEAT run.
+    final context = Context(config: newConfig, state: State(), aggregationFunctionDefs: AggregationFunctionSet.instance, activationDefs: ActivationFunctionSet.instance);
+    final reporter = StdOutReporter();
+    final p = Population(context: context, reporter: reporter);
+
+    final fitnessDelegate = XorRecurrentFitnessDelegate();
+    // Run for up to 100 generations.
+    final winner = p.run(fitnessDelegate: fitnessDelegate, generations: 10);
+
+    expect(winner.fitness, closeTo(3.9, 0.1));
+
   });
 }

@@ -112,7 +112,7 @@ void main() {
         fitnessCriterion: c
       );
 
-      final context = Context(config: config, aggregationFunctionDefs: AggregationFunctionSet.instance, activationDefs: ActivationFunctionSet.instance);
+      final context = Context(config: config, state: State(), aggregationFunctionDefs: AggregationFunctionSet.instance, activationDefs: ActivationFunctionSet.instance);
       final reporter = StdOutReporter();
       final p = Population(context: context, reporter: reporter);
       final fitnessDelegate = TestFitnessDelegate();

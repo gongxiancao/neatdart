@@ -43,7 +43,7 @@ class Population {
         stagnation: Stagnation(context: context.stagnation, reporter: reporter)),
       species = SpeciesSet(config: context.config.speciesSet, reporter: reporter)
   {
-    population = reproduction.createNew(context.config.genome, context.config.popSize);
+    population = reproduction.createNew(context.genome.config, context.genome.state, context.config.popSize);
     species.speciate(config: context.config, population: population, generation: generation);
   }
 
@@ -148,7 +148,7 @@ class Population {
     }
 
     // Create the next generation from the current generation.
-    population = reproduction.reproduce(config: config, speciesSet: species,
+    population = reproduction.reproduce(context: context, speciesSet: species,
         popSize: config.popSize, generation: generation);
 
     // Check for complete extinction.
@@ -158,7 +158,7 @@ class Population {
       // If requested by the user, create a completely new population,
       // otherwise raise an exception.
       if (config.resetOnExtinction) {
-        population = reproduction.createNew(config.genome, config.popSize);
+        population = reproduction.createNew(context.genome.config, context.genome.state,  config.popSize);
       } else {
         throw CompleteExtinctionException();
       }

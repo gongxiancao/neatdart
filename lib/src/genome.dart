@@ -20,28 +20,26 @@ class GenomeSize {
 }
 
 class GenomeConfig {
-  final int numInputs;
-  final int numOutputs;
+  int numInputs;
+  int numOutputs;
   int numHidden;
   InitialConnection initialConnection;
   double connectionFraction;
-  final bool singleStructuralMutation;
-  final bool structuralMutationSurer;
-  final double compatibilityDisjointCoefficient;
-  final double nodeAddProb;
-  final double nodeDeleteProb;
-  final double connAddProb;
-  final double connDeleteProb;
-  final bool feedForward;
-  final NodeGeneConfig node;
-  final ConnectionGeneConfig connection;
+  bool singleStructuralMutation;
+  bool structuralMutationSurer;
+  double compatibilityDisjointCoefficient;
+  double nodeAddProb;
+  double nodeDeleteProb;
+  double connAddProb;
+  double connDeleteProb;
+  bool feedForward;
+  NodeGeneConfig node;
+  ConnectionGeneConfig connection;
 
-  final List<int> inputKeys;
-  final List<int> outputKeys;
+  List<int> inputKeys;
+  List<int> outputKeys;
 
-  final outputKeysIndex = <int, bool>{};
-
-  int nodeIndexer = 0;
+  var outputKeysIndex = <int, bool>{};
 
   GenomeConfig({
     required this.numInputs,
@@ -75,8 +73,6 @@ class GenomeConfig {
     for (var key in outputKeys) {
       outputKeysIndex[key] = true;
     }
-
-    nodeIndexer =  outputKeys.reduce(max);
   }
 
   factory GenomeConfig.fromJson(Map<String, dynamic> data) {
@@ -176,15 +172,50 @@ class GenomeConfig {
   );
 }
 
+class GenomeState {
+  int nodeIndexer;
+  GenomeState({
+    this.nodeIndexer = 0,
+  });
+
+  factory GenomeState.fromJson(Map<String, dynamic> data) {
+    if (data case {
+      'nodeIndexer': int nodeIndexer,
+    }) {
+      return GenomeState(
+          nodeIndexer: nodeIndexer
+      );
+    }
+    throw FormatException('Invalid JSON: $data');
+  }
+
+  Map<String, dynamic> toJson() => {
+    'nodeIndexer': nodeIndexer,
+  };
+
+  @override
+  bool operator == (Object other) =>
+      other is GenomeState &&
+          other.runtimeType == runtimeType &&
+          other.nodeIndexer == nodeIndexer;
+
+  @override
+  int get hashCode => nodeIndexer.hashCode;
+}
+
 class GenomeContext {
   final GenomeConfig config;
+  final GenomeState state;
   final Map<String, double Function(Iterable<double>)> aggregationFunctionDefs;
   final Map<String, double Function(double)> activationDefs;
   GenomeContext({
     required this.config,
+    required this.state,
     required this.aggregationFunctionDefs,
     required this.activationDefs
-  });
+  }) {
+    state.nodeIndexer = state.nodeIndexer == 0 ? config.outputKeys.reduce(max) : state.nodeIndexer;
+  }
 }
 
 class Genome {
@@ -197,9 +228,8 @@ class Genome {
   Genome(this.key);
 
   /// According to the paper, the innovation number should be global
-  int getNewNodeKey(GenomeConfig config) {
-    config.nodeIndexer += 1;
-    return config.nodeIndexer;
+  int getNewNodeKey(GenomeState state) {
+    return ++state.nodeIndexer;
   }
 
   factory Genome.fromJson(Map<String, dynamic> data) {
@@ -224,6 +254,13 @@ class Genome {
     throw FormatException('Invalid JSON: $data');
   }
 
+  Map<String, dynamic> toJson() => {
+    'key': key,
+    'nodes': List<Map<String, dynamic>>.from(nodes.values.map((e) => e.toJson())),
+    'connections': List<Map<String, dynamic>>.from(connections.values.map((e) => e.toJson())),
+    'fitness': fitness
+  };
+
   NodeGene createNode(NodeGeneConfig config, int key) {
     final node = NodeGene(key);
     node.initAttributes(config);
@@ -241,7 +278,7 @@ class Genome {
   }
 
   /// Configure a new genome based on the given configuration.
-  void configureNew(GenomeConfig config) {
+  void configureNew(GenomeConfig config, GenomeState state) {
     // Create node genes for the output pins.
     for (var nodeKey in config.outputKeys) {
       nodes[nodeKey] = createNode(config.node, nodeKey);
@@ -250,7 +287,7 @@ class Genome {
     // Add hidden nodes if requested.
     if (config.numHidden > 0) {
       for (int i = 0; i < config.numHidden; ++i) {
-        final nodeKey = getNewNodeKey(config);
+        final nodeKey = getNewNodeKey(state);
         assert(nodes[nodeKey] == null);
         final node = createNode(config.node, nodeKey);
         nodes[nodeKey] = node;
@@ -422,12 +459,13 @@ class Genome {
   }
 
   /// Mutates this genome.
-  void mutate(GenomeConfig config) {
+  void mutate(GenomeConfig config, GenomeState state) {
+    print('mutate $key');
     if (config.singleStructuralMutation) {
       final div = max(1, (config.nodeAddProb + config.nodeDeleteProb + config.connAddProb + config.connDeleteProb));
       final r = RandomUtils.nextDouble();
       if (r < (config.nodeAddProb / div)) {
-        mutateAddNode(config);
+        mutateAddNode(config, state);
       } else if (r < ((config.nodeAddProb + config.nodeDeleteProb) / div)) {
         mutateDeleteNode(config);
       } else if (r < ((config.nodeAddProb + config.nodeDeleteProb + config.connAddProb)/div)) {
@@ -437,7 +475,7 @@ class Genome {
       }
     } else {
       if (RandomUtils.nextDouble() < config.nodeAddProb) {
-        mutateAddNode(config);
+        mutateAddNode(config, state);
       }
 
       if (RandomUtils.nextDouble() < config.nodeDeleteProb) {
@@ -464,7 +502,7 @@ class Genome {
     }
   }
 
-  void mutateAddNode(GenomeConfig config) {
+  void mutateAddNode(GenomeConfig config, GenomeState state) {
     if (connections.isEmpty) {
       if (config.structuralMutationSurer) {
         mutateAddConnection(config);
@@ -474,7 +512,7 @@ class Genome {
 
     // Choose a random connection to split
     final connToSplit = RandomUtils.choice(connections.values);
-    final newNodeId = getNewNodeKey(config);
+    final newNodeId = getNewNodeKey(state);
 
     final ng = createNode(config.node, newNodeId);
     nodes[newNodeId] = ng;
@@ -532,12 +570,17 @@ class Genome {
     // they cannot be the output end of a connection (see above).
 
     // For feed-forward networks, avoid creating cycles.
+    bool hasCycle = Graphs.createsCycle(List<ConnectionGeneKey>.from(connections.keys), key);
     if (config.feedForward && Graphs.createsCycle(List<ConnectionGeneKey>.from(connections.keys), key)) {
       return;
     }
 
     final newCg = createConnectionWithNodeKeys(config.connection, inNode, outNode);
     connections[newCg.key] = newCg;
+
+    if (hasCycle) {
+      print('got cycle: ${toJson()}');
+    }
   }
 
   int mutateDeleteNode(GenomeConfig config) {

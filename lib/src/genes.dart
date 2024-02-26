@@ -94,6 +94,14 @@ class NodeGene extends BaseGene<int> {
     throw FormatException('Invalid JSON: $data');
   }
 
+  Map<String, dynamic> toJson() => {
+    'key': key,
+    'bias': bias,
+    'response': response,
+    'activation': activation,
+    'aggregation': aggregation
+  };
+
   void initAttributes(NodeGeneConfig config) {
     bias = config.bias.initValue();
     response = config.response.initValue();
@@ -202,6 +210,11 @@ class ConnectionGeneKey {
     throw FormatException('Invalid JSON: $data');
   }
 
+  Map<String, dynamic> toJson() => {
+    'inputKey': inputKey,
+    'outputKey': outputKey
+  };
+
   @override
   bool operator == (other) =>
     other is ConnectionGeneKey &&
@@ -243,6 +256,12 @@ class ConnectionGene extends BaseGene<ConnectionGeneKey> {
     }
     throw FormatException('Invalid JSON: $data');
   }
+
+  Map<String, dynamic> toJson() => {
+    'key': key.toJson(),
+    'weight': weight,
+    'enabled': enabled
+  };
 
   void initAttributes(ConnectionGeneConfig config) {
     weight = config.weight.initValue();
